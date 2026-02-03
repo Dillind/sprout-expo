@@ -1,9 +1,9 @@
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function ProtectedLayout() {
   return (
-    <Tabs>
-      <Tabs.Screen name="index" options={{ title: "Home" }} />
-    </Tabs>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
   )
 }

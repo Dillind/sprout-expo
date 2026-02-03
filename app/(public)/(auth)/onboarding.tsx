@@ -1,15 +1,15 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const Index = () => {
+const OnboardingScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>I am on the public page</Text>
+      <Text>I am on the onboarding page</Text>
     </View>
   )
 }
 
-export default Index
+export default OnboardingScreen
 
 const styles = StyleSheet.create({
   container: {
