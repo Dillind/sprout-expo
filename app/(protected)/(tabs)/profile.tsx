@@ -1,15 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 
-const OnboardingScreen = () => {
+const Profile = () => {
   return (
     <View style={styles.container}>
-      <Text>I am on the onboarding page</Text>
+      <Text>I am on the profile page</Text>
     </View>
   )
 }
 
-export default OnboardingScreen;
+export default Profile
 
 const styles = StyleSheet.create({
   container: {

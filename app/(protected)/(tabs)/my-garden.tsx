@@ -1,15 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 
-const OnboardingScreen = () => {
+const MyGarden = () => {
   return (
     <View style={styles.container}>
-      <Text>I am on the onboarding page</Text>
+      <Text>I am on the my garden page</Text>
     </View>
   )
 }
 
-export default OnboardingScreen;
+export default MyGarden
 
 const styles = StyleSheet.create({
   container: {

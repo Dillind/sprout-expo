@@ -1,6 +1,8 @@
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export function RootLayoutWithAuth() {
   // TODO: Check if user is logged in with clerk hook auth once implemented.
@@ -10,10 +12,10 @@ export function RootLayoutWithAuth() {
 
   return (
     <Stack>
-      <Stack.Protected guard={isSignedIn}>
+      <Stack.Protected guard={!isSignedIn}>
         <Stack.Screen name="(protected)" options={{ headerShown: false }} />
       </Stack.Protected>
-      <Stack.Protected guard={!isSignedIn}>
+      <Stack.Protected guard={isSignedIn}>
         <Stack.Screen name="(public)" options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>
@@ -22,8 +24,13 @@ export function RootLayoutWithAuth() {
 
 export default function RootLayout() {
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-      <RootLayoutWithAuth />
+    <ClerkProvider tokenCache={tokenCache}>
+      <KeyboardProvider>
+        {/* TODO: add dark + light mode support later */}
+        <ThemeProvider value={DefaultTheme}>
+          <RootLayoutWithAuth />
+        </ThemeProvider>
+      </KeyboardProvider>
     </ClerkProvider>
   )
 }

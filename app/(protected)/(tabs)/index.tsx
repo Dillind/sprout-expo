@@ -1,15 +1,15 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const Index = () => {
+const Home = () => {
   return (
     <View style={styles.container}>
-      <Text>I am on the protected page</Text>
+      <Text>I am on the home page</Text>
     </View>
   )
 }
 
-export default Index
+export default Home
 
 const styles = StyleSheet.create({
   container: {
