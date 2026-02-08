@@ -3,6 +3,7 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import "../global.css";
 
 export function RootLayoutWithAuth() {
   // TODO: Check if user is logged in with clerk hook auth once implemented.
