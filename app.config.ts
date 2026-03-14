@@ -25,6 +25,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
         },
         android: {
             package: isProd ? 'au.com.sprout.android' : 'au.com.sprout.dev',
+            googleServicesFile: './google-services.json',
             adaptiveIcon: {
                 foregroundImage: './assets/images/icon.png',
                 backgroundColor: '#ffffff',
@@ -46,6 +47,13 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
                 'expo-secure-store',
                 {
                     configureAndroidBackup: true,
+                },
+            ],
+            'expo-apple-authentication',
+            [
+                '@react-native-google-signin/google-signin',
+                {
+                    iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME,
                 },
             ],
         ],
