@@ -17,6 +17,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
         scheme: 'sproutapp',
         icon: './assets/images/icon.png',
         userInterfaceStyle: 'automatic',
+        newArchEnabled: true,
         ios: {
             ...config.ios,
             supportsTablet: true,
