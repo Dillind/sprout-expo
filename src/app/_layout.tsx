@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
-import '../global.css';
+import '../../global.css';
 
 SplashScreen.preventAutoHideAsync();
 
