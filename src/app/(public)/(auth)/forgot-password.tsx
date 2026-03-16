@@ -1,11 +1,11 @@
-import { View, TextInput, Pressable, ActivityIndicator } from 'react-native';
-import { router } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
+import AppText from '@/src/components/core/AppText';
+import supabase from '@/src/lib/supabase';
 import { zodResolver } from '@hookform/resolvers/zod';
-import AppText from '@/components/core/AppText';
-import { supabase } from '@/src/lib/supabase';
+import { router } from 'expo-router';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, TextInput, View } from 'react-native';
+import { z } from 'zod';
 
 const schema = z.object({ email: z.string().email('Enter a valid email') });
 type FormData = z.infer<typeof schema>;
@@ -38,7 +38,7 @@ export default function ForgotPasswordScreen() {
         <AppText className="text-base text-gray-500">← Back</AppText>
       </Pressable>
       <AppText className="text-2xl font-bold mb-2">Reset password</AppText>
-      <AppText className="text-base text-gray-500 mb-8">Enter your email and we'll send you a reset link.</AppText>
+      <AppText className="text-base text-gray-500 mb-8">Enter your email and we&apos;ll send you a reset link.</AppText>
       <View className="gap-4">
         <Controller control={control} name="email" render={({ field: { onChange, value } }) => (
           <View>

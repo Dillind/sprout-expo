@@ -1,17 +1,24 @@
-import { Platform, Pressable, View } from 'react-native';
-import { router } from 'expo-router';
-import AppText from '@/components/core/AppText';
+import AppText from '@/src/components/core/AppText';
+import supabase from '@/src/lib/supabase';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { supabase } from '@/src/lib/supabase';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 GoogleSignin.configure({
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
   iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
 });
 
 export default function AuthEntryScreen() {
+  const [isAppleAvailable, setIsAppleAvailable] = useState(false);
+
+  useEffect(() => {
+    AppleAuthentication.isAvailableAsync().then(setIsAppleAvailable);
+  }, []);
+
   async function handleAppleSignIn() {
     const rawNonce = Math.random().toString(36).substring(2);
     const hashedNonce = await Crypto.digestStringAsync(
@@ -52,7 +59,7 @@ export default function AuthEntryScreen() {
         <AppText className="text-base text-gray-500">Sign in to continue growing.</AppText>
       </View>
       <View className="gap-3">
-        {Platform.OS === 'ios' && (
+        {isAppleAvailable && (
           <AppleAuthentication.AppleAuthenticationButton
             buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
             buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}

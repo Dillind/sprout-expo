@@ -1,4 +1,4 @@
-import { AuthProvider, useAuth } from '@/src/providers/AuthProvider';
+import AuthProvider, { useAuth } from '@/src/providers/AuthProvider';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -8,14 +8,17 @@ import '../../global.css';
 
 SplashScreen.preventAutoHideAsync();
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+if (__DEV__) require('../../ReactotronConfig');
+
 function RootLayoutNav() {
   const { session, isLoading } = useAuth();
   const [fontsLoaded, fontsError] = useFonts({
-    'Inter-Bold': require('@/assets/fonts/Inter-Bold.ttf'),
-    'Inter-SemiBold': require('@/assets/fonts/Inter-SemiBold.ttf'),
-    'Inter-Medium': require('@/assets/fonts/Inter-Medium.ttf'),
-    'Inter-Regular': require('@/assets/fonts/Inter-Regular.ttf'),
-    'Inter-Light': require('@/assets/fonts/Inter-Light.ttf'),
+    'Inter-Bold': require('@/src/assets/fonts/Inter-Bold.ttf'),
+    'Inter-SemiBold': require('@/src/assets/fonts/Inter-SemiBold.ttf'),
+    'Inter-Medium': require('@/src/assets/fonts/Inter-Medium.ttf'),
+    'Inter-Regular': require('@/src/assets/fonts/Inter-Regular.ttf'),
+    'Inter-Light': require('@/src/assets/fonts/Inter-Light.ttf'),
   });
 
   const ready = (fontsLoaded || !!fontsError) && !isLoading;

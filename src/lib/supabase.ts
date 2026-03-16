@@ -1,21 +1,34 @@
-import * as SecureStore from 'expo-secure-store';
 import { createClient } from '@supabase/supabase-js';
+import { createMMKV } from 'react-native-mmkv';
 
-const ExpoSecureStoreAdapter = {
-  getItem: (key: string) => SecureStore.getItemAsync(key),
-  setItem: (key: string, value: string) => SecureStore.setItemAsync(key, value),
-  removeItem: (key: string) => SecureStore.deleteItemAsync(key),
+const storage = createMMKV({ id: 'supabase-auth' });
+
+const mmkvStorageAdapter = {
+    getItem: (key: string): Promise<string | null> => {
+        const value = storage.getString(key);
+        return Promise.resolve(value ?? null);
+    },
+    setItem: (key: string, value: string): Promise<void> => {
+        storage.set(key, value);
+        return Promise.resolve();
+    },
+    removeItem: (key: string): Promise<void> => {
+        storage.remove(key);
+        return Promise.resolve();
+    },
 };
 
-export const supabase = createClient(
-  process.env.EXPO_PUBLIC_SUPABASE_URL!,
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
-  {
-    auth: {
-      storage: ExpoSecureStoreAdapter,
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: false,
+const supabase = createClient(
+    process.env.EXPO_PUBLIC_SUPABASE_URL!,
+    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+        auth: {
+            storage: mmkvStorageAdapter,
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: false,
+        },
     },
-  }
 );
+
+export default supabase;

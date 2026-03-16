@@ -15,9 +15,8 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
         version: '1.0.0',
         orientation: 'portrait',
         scheme: 'sproutapp',
-        icon: './assets/images/icon.png',
+        icon: './src/assets/images/icon.png',
         userInterfaceStyle: 'automatic',
-        newArchEnabled: true,
         ios: {
             ...config.ios,
             supportsTablet: true,
@@ -27,12 +26,12 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
             package: isProd ? 'au.com.sprout.android' : 'au.com.sprout.dev',
             googleServicesFile: './google-services.json',
             adaptiveIcon: {
-                foregroundImage: './assets/images/icon.png',
+                foregroundImage: './src/assets/images/icon.png',
                 backgroundColor: '#ffffff',
             },
         },
         plugins: [
-            ['expo-router', { root: 'src' }],
+            'expo-router',
             'expo-font',
             'expo-image',
             [
@@ -57,6 +56,11 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
                 },
             ],
         ],
+        extra: {
+            eas: {
+                projectId: '216d5193-66c2-4303-a4ea-61e5dcbbf68e',
+            },
+        },
     };
 };
 

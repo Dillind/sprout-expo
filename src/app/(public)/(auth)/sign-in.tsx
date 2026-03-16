@@ -1,21 +1,24 @@
-import { View, TextInput, Pressable, ActivityIndicator } from 'react-native';
-import { router } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
+import AppText from '@/src/components/core/AppText';
+import supabase from '@/src/lib/supabase';
 import { zodResolver } from '@hookform/resolvers/zod';
-import AppText from '@/components/core/AppText';
-import { supabase } from '@/src/lib/supabase';
+import { router } from 'expo-router';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, TextInput, View } from 'react-native';
+import { z } from 'zod';
 
 const schema = z.object({
-  email: z.string().email('Enter a valid email'),
+  email: z.email('Enter a valid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 type FormData = z.infer<typeof schema>;
 
 export default function SignInScreen() {
   const [error, setError] = useState<string | null>(null);
-  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   async function onSubmit(data: FormData) {
     setError(null);
@@ -50,7 +53,7 @@ export default function SignInScreen() {
           <AppText className="text-sm text-gray-500">Forgot password?</AppText>
         </Pressable>
         <Pressable onPress={() => router.push('/(public)/(auth)/sign-up')} className="items-center">
-          <AppText className="text-sm text-gray-500">Don't have an account? <AppText className="text-green-700 font-medium">Sign up</AppText></AppText>
+          <AppText className="text-sm text-gray-500">Don&apos;t have an account? <AppText className="text-green-700 font-medium">Sign up</AppText></AppText>
         </Pressable>
       </View>
     </View>

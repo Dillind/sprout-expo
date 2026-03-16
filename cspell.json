@@ -1,7 +1,16 @@
 {
 	"version": "0.2",
 	"language": "en",
-	"words": ["myapp", "TouchableOpacity", "signin", "svgs", "ellipsize", "Uniwind", "Pressable"],
+	"words": [
+		"myapp",
+		"TouchableOpacity",
+		"signin",
+		"svgs",
+		"ellipsize",
+		"Uniwind",
+		"Pressable",
+		"Parralax"
+	],
 	"ignoreRegExpList": [
 		"/Author.+/",
 		"/data:.*/",

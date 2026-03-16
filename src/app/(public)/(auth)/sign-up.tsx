@@ -1,11 +1,11 @@
-import { View, TextInput, Pressable, ActivityIndicator } from 'react-native';
-import { router } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
+import AppText from '@/src/components/core/AppText';
+import supabase from '@/src/lib/supabase';
 import { zodResolver } from '@hookform/resolvers/zod';
-import AppText from '@/components/core/AppText';
-import { supabase } from '@/src/lib/supabase';
+import { router } from 'expo-router';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { ActivityIndicator, Pressable, TextInput, View } from 'react-native';
+import { z } from 'zod';
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),

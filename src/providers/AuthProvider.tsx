@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import supabase from '@/src/lib/supabase';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '@/src/lib/supabase';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export type Profile = {
   id: string;
@@ -21,14 +21,20 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
 });
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      console.warn('Auth initialization timed out, forcing isLoading = false');
+      setIsLoading(false);
+    }, 5000);
+
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
+        clearTimeout(timeout);
         setSession(session);
         if (session) {
           fetchProfile(session.user.id);
@@ -36,11 +42,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setIsLoading(false);
         }
       })
-      .catch(() => setIsLoading(false));
+      .catch(() => {
+        clearTimeout(timeout);
+        setIsLoading(false);
+      });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      clearTimeout(timeout);
       setSession(session);
       if (session) {
         await fetchProfile(session.user.id);
@@ -50,7 +60,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function fetchProfile(userId: string) {
@@ -82,3 +95,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useAuth = () => useContext(AuthContext);
+
+
+export default AuthProvider;
