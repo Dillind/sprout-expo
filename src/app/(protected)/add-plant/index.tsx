@@ -12,7 +12,7 @@ import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import { COLORS } from '@/src/constants/theme';
 
 export default function AddPlantStep1() {
-    const { name, photoUri, setName, setPhotoUri } = useAddPlantStore();
+    const { name, photoUri, setName, setPhotoUri, reset } = useAddPlantStore();
     const [loading, setLoading] = useState(false);
 
     const handlePhotoPress = () => {
@@ -56,7 +56,7 @@ export default function AddPlantStep1() {
     return (
         <SafeAreaView className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-                <Pressable onPress={() => router.back()} className="pt-4 mb-3">
+                <Pressable onPress={() => { reset(); router.back(); }} className="pt-4 mb-3">
                     <ChevronLeft size={24} color={COLORS.textPrimary} />
                 </Pressable>
 

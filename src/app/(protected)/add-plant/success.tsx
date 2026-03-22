@@ -6,8 +6,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
 
+const LOCATION_LABELS: Record<string, string> = {
+    'living-room': 'Living Room',
+    'bedroom': 'Bedroom',
+    'balcony': 'Balcony',
+    'office': 'Office',
+    'kitchen': 'Kitchen',
+    'bathroom': 'Bathroom',
+};
+
 export default function AddPlantSuccess() {
     const { plantName, location } = useLocalSearchParams<{ plantName: string; location: string }>();
+    const locationLabel = LOCATION_LABELS[location] ?? location;
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -43,7 +53,7 @@ export default function AddPlantSuccess() {
                     <AppText size="sm" font="bold" className="mb-1">{plantName}</AppText>
                     <View className="flex-row items-center gap-1.5">
                         <MapPin size={14} color={COLORS.textSecondary} />
-                        <AppText size="xs" color="gray">{location}</AppText>
+                        <AppText size="xs" color="gray">{locationLabel}</AppText>
                     </View>
                 </View>
 

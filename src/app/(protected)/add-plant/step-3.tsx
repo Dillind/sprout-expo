@@ -18,13 +18,16 @@ function frequencyLabel(days: number): string {
 }
 
 async function uploadPhoto(uri: string, userId: string): Promise<string | null> {
-    const ext = uri.split('.').pop() ?? 'jpg';
-    const fileName = `${userId}/${Date.now()}.${ext}`;
+    // Extract extension safely, handling query strings in URI
+    const uriWithoutQuery = uri.split('?')[0];
+    const ext = uriWithoutQuery.split('.').pop() ?? 'jpg';
+    const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext.toLowerCase()) ? ext.toLowerCase() : 'jpg';
+    const fileName = `${userId}/${Date.now()}.${safeExt}`;
     const response = await fetch(uri);
     const blob = await response.blob();
     const { error } = await supabase.storage
         .from('plant-photos')
-        .upload(fileName, blob, { contentType: `image/${ext}` });
+        .upload(fileName, blob, { contentType: `image/${safeExt}` });
     if (error) return null;
     const { data } = supabase.storage.from('plant-photos').getPublicUrl(fileName);
     return data.publicUrl;
@@ -41,11 +44,18 @@ export default function AddPlantStep3() {
     const handleSubmit = async () => {
         setSubmitting(true);
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                Alert.alert('Session expired', 'Please sign in again.');
+                return;
+            }
 
             let photoUrl: string | null = null;
-            if (photoUri && user) {
-                photoUrl = await uploadPhoto(photoUri, user.id);
+            if (photoUri) {
+                photoUrl = await uploadPhoto(photoUri, session.user.id);
+                if (!photoUrl) {
+                    Alert.alert('Photo upload failed', 'Your plant will be saved without a photo.');
+                }
                 setPhotoUrl(photoUrl);
             }
 
