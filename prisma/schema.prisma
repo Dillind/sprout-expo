@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Plant {
+  id               String   @id @default(cuid())
+  userId           String   @map("user_id")
+  name             String
+  photoUrl         String?  @map("photo_url")
+  location         String
+  wateringDays     Int      @default(7) @map("watering_days")
+  remindersEnabled Boolean  @default(false) @map("reminders_enabled")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("plants")
+}

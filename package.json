@@ -19,6 +19,7 @@
 		"@hookform/resolvers": "^5.2.2",
 		"@legendapp/list": "^2.0.19",
 		"@lodev09/react-native-true-sheet": "^3.8.2",
+		"@prisma/client": "^7.5.0",
 		"@react-native-google-signin/google-signin": "^16.1.2",
 		"@react-navigation/bottom-tabs": "^7.4.0",
 		"@react-navigation/elements": "^2.6.3",
@@ -45,6 +46,7 @@
 		"expo-symbols": "~55.0.4",
 		"expo-system-ui": "~55.0.9",
 		"expo-web-browser": "~55.0.9",
+		"lucide-react-native": "^0.577.0",
 		"react": "19.2.0",
 		"react-dom": "19.2.0",
 		"react-hook-form": "^7.71.1",
@@ -76,6 +78,7 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.5",
 		"eslint-plugin-react-hooks": "^6.1.1",
+		"prisma": "^7.5.0",
 		"typescript": "~5.9.2"
 	},
 	"private": true
