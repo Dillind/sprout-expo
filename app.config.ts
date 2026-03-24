@@ -24,12 +24,13 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
         },
         android: {
             package: isProd ? 'au.com.sprout.android' : 'au.com.sprout.dev',
-            googleServicesFile: './google-services.json',
+            // googleServicesFile: './google-services.json',
             adaptiveIcon: {
                 foregroundImage: './src/assets/images/icon.png',
                 backgroundColor: '#ffffff',
             },
         },
+        web: { output: 'server' },
         plugins: [
             'expo-router',
             'expo-font',
@@ -58,7 +59,7 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
         ],
         extra: {
             eas: {
-                projectId: '216d5193-66c2-4303-a4ea-61e5dcbbf68e',
+                projectId: isProd ? '' : '216d5193-66c2-4303-a4ea-61e5dcbbf68e',
             },
         },
     };

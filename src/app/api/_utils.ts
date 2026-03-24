@@ -1,11 +1,14 @@
-import supabaseAdmin from '@/src/lib/supabase-admin';
+import getSupabaseAdmin from '@/src/lib/supabase-admin';
 
 export async function getUserId(request: Request): Promise<string | null> {
     const authHeader = request.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) return null;
 
     const token = authHeader.slice(7);
-    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+    const {
+        data: { user },
+        error,
+    } = await getSupabaseAdmin().auth.getUser(token);
     if (error || !user) return null;
 
     return user.id;

@@ -1,5 +1,5 @@
+import { getUserId, unauthorized } from '@/src/app/api/_utils';
 import prisma from '@/src/lib/prisma';
-import { getUserId, unauthorized } from './_utils';
 
 export async function GET(request: Request) {
     try {

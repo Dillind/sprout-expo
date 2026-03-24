@@ -1,19 +1,18 @@
-import React from 'react';
-import { View, Pressable, ScrollView } from 'react-native';
-import { router } from 'expo-router';
-import { Sofa, BedDouble, Sun, Monitor, UtensilsCrossed, Bath, Plus } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import AppText from '@/src/components/core/AppText';
-import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import { COLORS } from '@/src/constants/theme';
+import { useAddPlantStore } from '@/src/stores/add-plant.store';
+import { router } from 'expo-router';
+import { Bath, BedDouble, Monitor, Plus, Sofa, Sun, UtensilsCrossed } from 'lucide-react-native';
+import React from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 
 const LOCATIONS = [
     { id: 'living-room', label: 'Living Room', sublabel: 'Sofa area', Icon: Sofa },
-    { id: 'bedroom',     label: 'Bedroom',     sublabel: 'Bedside',   Icon: BedDouble },
-    { id: 'balcony',     label: 'Balcony',     sublabel: 'Outdoor',   Icon: Sun },
-    { id: 'office',      label: 'Office',      sublabel: 'Desk area', Icon: Monitor },
-    { id: 'kitchen',     label: 'Kitchen',     sublabel: 'Counter top', Icon: UtensilsCrossed },
-    { id: 'bathroom',    label: 'Bathroom',    sublabel: 'Shelf',     Icon: Bath },
+    { id: 'bedroom', label: 'Bedroom', sublabel: 'Bedside', Icon: BedDouble },
+    { id: 'balcony', label: 'Balcony', sublabel: 'Outdoor', Icon: Sun },
+    { id: 'office', label: 'Office', sublabel: 'Desk area', Icon: Monitor },
+    { id: 'kitchen', label: 'Kitchen', sublabel: 'Counter top', Icon: UtensilsCrossed },
+    { id: 'bathroom', label: 'Bathroom', sublabel: 'Shelf', Icon: Bath },
 ];
 
 export default function AddPlantStep2() {
@@ -21,7 +20,7 @@ export default function AddPlantStep2() {
     const canProceed = location.length > 0;
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 {/* Progress */}
                 <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 2 OF 3</AppText>
@@ -99,6 +98,6 @@ export default function AddPlantStep2() {
                     <AppText size="sm" font="bold" color="white">Next Step →</AppText>
                 </Pressable>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }

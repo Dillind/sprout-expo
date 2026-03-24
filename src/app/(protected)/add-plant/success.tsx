@@ -1,10 +1,9 @@
-import React from 'react';
-import { View, Pressable } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { Leaf, MapPin, X } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Leaf, MapPin, X } from 'lucide-react-native';
+import React from 'react';
+import { Pressable, View } from 'react-native';
 
 const LOCATION_LABELS: Record<string, string> = {
     'living-room': 'Living Room',
@@ -20,7 +19,7 @@ export default function AddPlantSuccess() {
     const locationLabel = LOCATION_LABELS[location] ?? location;
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             {/* Close button */}
             <View className="px-6 pt-4 items-end">
                 <Pressable
@@ -75,6 +74,6 @@ export default function AddPlantSuccess() {
                     </Pressable>
                 </View>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }

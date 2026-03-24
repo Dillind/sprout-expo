@@ -1,3 +1,4 @@
+import GoogleIcon from '@/src/assets/icons/google-icon';
 import AppText from '@/src/components/core/AppText';
 import supabase from '@/src/lib/supabase';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -72,6 +73,7 @@ export default function AuthEntryScreen() {
           onPress={handleGoogleSignIn}
           className="flex-row items-center justify-center h-[52px] rounded-xl border border-gray-200 gap-2"
         >
+          <GoogleIcon width={20} height={20} />
           <AppText className="text-base font-medium">Continue with Google</AppText>
         </Pressable>
         <Pressable

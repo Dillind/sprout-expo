@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { View, Pressable, Switch, ScrollView, Alert } from 'react-native';
+import { createPlant } from '@/src/api/plants';
+import AppText from '@/src/components/core/AppText';
+import { COLORS } from '@/src/constants/theme';
+import supabase from '@/src/lib/supabase';
+import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import { router } from 'expo-router';
 import { Leaf } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import AppText from '@/src/components/core/AppText';
-import { useAddPlantStore } from '@/src/stores/add-plant.store';
-import { createPlant } from '@/src/api/plants';
-import supabase from '@/src/lib/supabase';
-import { COLORS } from '@/src/constants/theme';
+import React, { useState } from 'react';
+import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
 
 function frequencyLabel(days: number): string {
     if (days === 1) return 'Every day';
@@ -81,7 +80,7 @@ export default function AddPlantStep3() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 {/* Progress */}
                 <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 3 OF 3</AppText>
@@ -125,7 +124,7 @@ export default function AddPlantStep3() {
                 <View className="bg-gray-50 rounded-2xl p-5 mb-4 flex-row items-center justify-between">
                     <View>
                         <AppText size="sm" font="semiBold">Watering Reminders</AppText>
-                        <AppText size="xs" color="gray">Get notified when it's time to water</AppText>
+                        <AppText size="xs" color="gray">Get notified when it&apos;s time to water</AppText>
                     </View>
                     <Switch
                         value={remindersEnabled}
@@ -144,7 +143,7 @@ export default function AddPlantStep3() {
                     <View className="flex-1">
                         <AppText size="xs" font="semiBold" className="mb-1">Leafling says</AppText>
                         <AppText size="xs" color="gray">
-                            Most houseplants thrive with watering every 7–14 days. Start with 7 and adjust based on your plant's needs.
+                            Most houseplants thrive with watering every 7–14 days. Start with 7 and adjust based on your plant&apos;s needs.
                         </AppText>
                     </View>
                 </View>
@@ -170,6 +169,6 @@ export default function AddPlantStep3() {
                     </AppText>
                 </Pressable>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }

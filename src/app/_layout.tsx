@@ -1,12 +1,15 @@
 import AuthProvider, { useAuth } from '@/src/providers/AuthProvider';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import '../../global.css';
 
-SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 if (__DEV__) require('../../ReactotronConfig');
@@ -43,12 +46,16 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardProvider>
-        <ThemeProvider value={DefaultTheme}>
-          <RootLayoutNav />
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <ThemeProvider value={DefaultTheme}>
+              <RootLayoutNav />
+            </ThemeProvider>
+          </AuthProvider >
+        </QueryClientProvider>
       </KeyboardProvider>
-    </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

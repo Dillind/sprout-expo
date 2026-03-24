@@ -1,15 +1,19 @@
+import AppText from '@/src/components/core/AppText';
+import { COLORS } from '@/src/constants/theme';
+import { useAddPlantStore } from '@/src/stores/add-plant.store';
+import * as ImagePicker from 'expo-image-picker';
+import { router } from 'expo-router';
+import { ChevronLeft, ImagePlus } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
-    View, TextInput, TouchableOpacity, Pressable,
-    Alert, ActivityIndicator, Image, ScrollView,
+    ActivityIndicator,
+    Alert,
+    Image,
+    Pressable,
+    ScrollView,
+    TextInput, TouchableOpacity,
+    View,
 } from 'react-native';
-import { router } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
-import { ImagePlus, ChevronLeft } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import AppText from '@/src/components/core/AppText';
-import { useAddPlantStore } from '@/src/stores/add-plant.store';
-import { COLORS } from '@/src/constants/theme';
 
 export default function AddPlantStep1() {
     const { name, photoUri, setName, setPhotoUri, reset } = useAddPlantStore();
@@ -54,7 +58,7 @@ export default function AddPlantStep1() {
     const canProceed = name.trim().length > 0;
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 <Pressable onPress={() => { reset(); router.back(); }} className="pt-4 mb-3">
                     <ChevronLeft size={24} color={COLORS.textPrimary} />
@@ -112,6 +116,6 @@ export default function AddPlantStep1() {
                     <AppText size="sm" font="bold" color="white">Next →</AppText>
                 </Pressable>
             </View>
-        </SafeAreaView>
+        </View>
     );
 }
