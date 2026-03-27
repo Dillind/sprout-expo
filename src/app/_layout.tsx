@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { Toaster } from 'sonner-native';
 import '../../global.css';
 
 
@@ -63,6 +64,7 @@ export default function RootLayout() {
           <AuthProvider>
             <ThemeProvider value={DefaultTheme}>
               <RootLayoutNav />
+              <Toaster />
             </ThemeProvider>
           </AuthProvider >
         </QueryClientProvider>
