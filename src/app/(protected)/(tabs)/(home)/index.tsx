@@ -1,10 +1,12 @@
-import { listPlants, Plant } from '@/src/api/plants';
+import { Plant } from '@/src/api/plants';
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
+import { usePlants } from '@/src/hooks/plants';
+import { LegendList } from '@legendapp/list';
 import { router } from 'expo-router';
 import { Leaf, Plus } from 'lucide-react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
 function PlantCard({ plant }: { plant: Plant }) {
     return (
@@ -43,31 +45,7 @@ function EmptyState() {
 }
 
 export default function HomeScreen() {
-    const [plants, setPlants] = useState<Plant[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchPlants = useCallback(async () => {
-        try {
-            setError(null);
-            const data = await listPlants();
-            setPlants(data);
-        } catch (err) {
-            console.error('[HomeScreen]', err);
-            setError('Failed to load plants');
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchPlants().finally(() => setLoading(false));
-    }, [fetchPlants]);
-
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true);
-        await fetchPlants();
-        setRefreshing(false);
-    }, [fetchPlants]);
+    const { plants, isLoading, isError, isRefetching, refetch } = usePlants();
 
     return (
         <View className="flex-1" style={{ backgroundColor: COLORS.backgroundSecondary }}>
@@ -86,31 +64,27 @@ export default function HomeScreen() {
             </View>
 
             {/* Content */}
-            {loading ? (
+            {isLoading ? (
                 <View className="flex-1 items-center justify-center">
                     <ActivityIndicator size="large" color={COLORS.primary} />
                 </View>
-            ) : error ? (
+            ) : isError ? (
                 <View className="flex-1 items-center justify-center px-6">
-                    <AppText size="sm" color="gray" align="center" className="mb-4">{error}</AppText>
-                    <Pressable onPress={fetchPlants}>
+                    <AppText size="sm" color="gray" align="center" className="mb-4">Failed to load plants</AppText>
+                    <Pressable onPress={() => { refetch(); }}>
                         <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>Try again</AppText>
                     </Pressable>
                 </View>
             ) : (
-                <FlatList
+                <LegendList
                     data={plants}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => <PlantCard plant={item} />}
                     ListEmptyComponent={<EmptyState />}
                     contentContainerStyle={{ padding: 16, flexGrow: 1 }}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                            tintColor={COLORS.primary}
-                        />
-                    }
+                    estimatedItemSize={72}
+                    refreshing={isRefetching}
+                    onRefresh={() => { refetch(); }}
                 />
             )}
         </View>

@@ -8,7 +8,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import '../../global.css';
 
-
 const queryClient = new QueryClient();
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports

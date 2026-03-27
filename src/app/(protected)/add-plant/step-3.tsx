@@ -1,11 +1,11 @@
-import { createPlant } from '@/src/api/plants';
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
+import { useCreatePlant } from '@/src/hooks/plants';
 import supabase from '@/src/lib/supabase';
 import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import { router } from 'expo-router';
 import { Leaf } from 'lucide-react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
 
 function frequencyLabel(days: number): string {
@@ -38,10 +38,10 @@ export default function AddPlantStep3() {
         wateringDays, remindersEnabled,
         setWateringDays, setRemindersEnabled, setPhotoUrl, reset,
     } = useAddPlantStore();
-    const [submitting, setSubmitting] = useState(false);
+    const { mutateAsync, isPending } = useCreatePlant();
 
     const handleSubmit = async () => {
-        setSubmitting(true);
+        if (isPending) return;
         try {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
@@ -58,7 +58,7 @@ export default function AddPlantStep3() {
                 setPhotoUrl(photoUrl);
             }
 
-            const plant = await createPlant({
+            const plant = await mutateAsync({
                 name,
                 photoUrl,
                 location,
@@ -71,11 +71,8 @@ export default function AddPlantStep3() {
                 pathname: '/(protected)/add-plant/success',
                 params: { plantName: plant.name, location: plant.location },
             });
-        } catch (error) {
-            Alert.alert('Error', 'Failed to save your plant. Please try again.');
-            console.error('[AddPlant]', error);
-        } finally {
-            setSubmitting(false);
+        } catch {
+            // Error alert handled by useCreatePlant's onError callback
         }
     };
 
@@ -160,12 +157,12 @@ export default function AddPlantStep3() {
                 </Pressable>
                 <Pressable
                     onPress={handleSubmit}
-                    disabled={submitting}
+                    disabled={isPending}
                     className="flex-1 h-[52px] rounded-xl items-center justify-center"
-                    style={{ backgroundColor: submitting ? COLORS.border : COLORS.primaryDark }}
+                    style={{ backgroundColor: isPending ? COLORS.border : COLORS.primaryDark }}
                 >
                     <AppText size="sm" font="bold" color="white">
-                        {submitting ? 'Saving...' : 'Finish Setup'}
+                        {isPending ? 'Saving...' : 'Finish Setup'}
                     </AppText>
                 </Pressable>
             </View>

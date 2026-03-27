@@ -11,7 +11,8 @@
 		"prebuild:android": "expo prebuild --platform android",
 		"web": "expo start --web",
 		"lint": "expo lint",
-		"type-check": "npx tsc --noEmit"
+		"type-check": "npx tsc --noEmit",
+		"sync:types": "npx openapi-typescript@6.7.6 ./openapi.json -o ./src/api/generated.d.ts"
 	},
 	"dependencies": {
 		"@expo/ui": "55.0.1",
@@ -50,6 +51,7 @@
 		"expo-system-ui": "~55.0.9",
 		"expo-web-browser": "~55.0.9",
 		"lucide-react-native": "^0.577.0",
+		"openapi-fetch": "^0.17.0",
 		"pg": "^8.20.0",
 		"react": "19.2.0",
 		"react-dom": "19.2.0",
