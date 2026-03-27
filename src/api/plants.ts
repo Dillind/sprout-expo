@@ -1,14 +1,15 @@
+import createClient from 'openapi-fetch';
 import supabase from '@/src/lib/supabase';
+import type { components, paths } from './generated';
 
-// In dev, Expo dev server hosts the API routes
+export type Plant = components['schemas']['Plant'];
+export type CreatePlantPayload = components['schemas']['CreatePlantRequest'];
+export type UpdatePlantPayload = Partial<components['schemas']['CreatePlantRequest']>;
+
 const API_BASE = process.env.EXPO_PUBLIC_API_URL;
-console.log(API_BASE);
+if (!API_BASE) throw new Error('EXPO_PUBLIC_API_URL is not set');
 
-if (!API_BASE) {
-    throw new Error('EXPO_PUBLIC_API_URL is not set');
-}
-
-async function getAuthHeaders(): Promise<Record<string, string>> {
+async function makeClient() {
     const {
         data: { session },
     } = await supabase.auth.getSession();
@@ -55,20 +56,6 @@ export async function createPlant(payload: CreatePlantPayload): Promise<Plant> {
         headers,
         body: JSON.stringify(payload),
     });
-    console.log(res);
-    if (!res.ok) {
-        const text = await res.text();
-        let message = 'Failed to create plant';
-        try {
-            const err = JSON.parse(text);
-            message = err.error ?? message;
-        } catch {
-            console.error('[createPlant] Non-JSON error response:', text.slice(0, 500));
-        }
-        throw new Error(message);
-    }
-    const data = await res.json();
-    return data.plant;
 }
 
 export type UpdatePlantPayload = {
@@ -83,78 +70,38 @@ export type UpdatePlantPayload = {
 };
 
 export async function listPlants(): Promise<Plant[]> {
-    const headers = await getAuthHeaders();
-    const res = await fetch(`${API_BASE}/plants`, { headers });
-    if (!res.ok) {
-        const text = await res.text();
-        let message = 'Failed to fetch plants';
-        try {
-            const err = JSON.parse(text);
-            message = err.error ?? message;
-        } catch {
-            console.error('[listPlants] Non-JSON error response:', text.slice(0, 500));
-        }
-        throw new Error(message);
-    }
-    const data = await res.json();
-    return data.plants;
+    const client = await makeClient();
+    const { data, error } = await client.GET('/plants');
+    if (error) throw new Error('Failed to fetch plants');
+    return data.plants ?? [];
 }
 
 export async function getPlant(id: string): Promise<Plant> {
-    const headers = await getAuthHeaders();
-    const res = await fetch(`${API_BASE}/plants/${id}`, { headers });
-    if (!res.ok) {
-        const text = await res.text();
-        let message = 'Failed to fetch plant';
-        try {
-            const err = JSON.parse(text);
-            message = err.error ?? message;
-        } catch {
-            console.error('[getPlant] Non-JSON error response:', text.slice(0, 500));
-        }
-        throw new Error(message);
-    }
-    const data = await res.json();
-    return data.plant;
+    const client = await makeClient();
+    const { data, error } = await client.GET('/plants/{id}', { params: { path: { id } } });
+    if (error) throw new Error('Failed to fetch plant');
+    return data.plant!;
+}
+
+export async function createPlant(payload: CreatePlantPayload): Promise<Plant> {
+    const client = await makeClient();
+    const { data, error } = await client.POST('/plants', { body: payload });
+    if (error) throw new Error('Failed to create plant');
+    return data.plant!;
 }
 
 export async function updatePlant(id: string, payload: UpdatePlantPayload): Promise<Plant> {
-    const headers = await getAuthHeaders();
-    const res = await fetch(`${API_BASE}/plants/${id}`, {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify(payload),
+    const client = await makeClient();
+    const { data, error } = await client.PATCH('/plants/{id}', {
+        params: { path: { id } },
+        body: payload as CreatePlantPayload,
     });
-    if (!res.ok) {
-        const text = await res.text();
-        let message = 'Failed to update plant';
-        try {
-            const err = JSON.parse(text);
-            message = err.error ?? message;
-        } catch {
-            console.error('[updatePlant] Non-JSON error response:', text.slice(0, 500));
-        }
-        throw new Error(message);
-    }
-    const data = await res.json();
-    return data.plant;
+    if (error) throw new Error('Failed to update plant');
+    return data.plant!;
 }
 
 export async function deletePlant(id: string): Promise<void> {
-    const headers = await getAuthHeaders();
-    const res = await fetch(`${API_BASE}/plants/${id}`, {
-        method: 'DELETE',
-        headers,
-    });
-    if (!res.ok) {
-        const text = await res.text();
-        let message = 'Failed to delete plant';
-        try {
-            const err = JSON.parse(text);
-            message = err.error ?? message;
-        } catch {
-            console.error('[deletePlant] Non-JSON error response:', text.slice(0, 500));
-        }
-        throw new Error(message);
-    }
+    const client = await makeClient();
+    const { error } = await client.DELETE('/plants/{id}', { params: { path: { id } } });
+    if (error) throw new Error('Failed to delete plant');
 }

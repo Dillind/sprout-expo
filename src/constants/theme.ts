@@ -5,7 +5,7 @@ export const COLORS = {
     white: '#ffffff',
 
     // Primary Green Palette
-    primary: '#78B652',
+    primary: '#2D6B49',
     primaryDark: '#5A8A3D',
     primaryLight: '#9CD374',
 

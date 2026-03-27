@@ -11,7 +11,6 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { Toaster } from 'sonner-native';
 import '../../global.css';
 
-
 const queryClient = new QueryClient();
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports

@@ -13,6 +13,7 @@
         "schemas": {
             "Plant": {
                 "type": "object",
+                "required": ["id", "userId", "name", "location", "wateringDays", "remindersEnabled", "createdAt", "updatedAt"],
                 "properties": {
                     "id": { "type": "string" },
                     "userId": { "type": "string" },
@@ -172,7 +173,19 @@
                     }
                 },
                 "responses": {
-                    "200": { "description": "Updated plant" },
+                    "200": {
+                        "description": "Updated plant",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "plant": { "$ref": "#/components/schemas/Plant" }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "401": { "description": "Unauthorized" },
                     "404": { "description": "Not found" }
                 }
