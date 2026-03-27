@@ -2,8 +2,10 @@ import AuthProvider, { useAuth } from '@/src/providers/AuthProvider';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
+import * as Notifications from 'expo-notifications';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import '../../global.css';
@@ -29,6 +31,15 @@ function RootLayoutNav() {
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
   }, [ready]);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('plant-care', {
+        name: 'Plant Care Reminders',
+        importance: Notifications.AndroidImportance.DEFAULT,
+      });
+    }
+  }, []);
 
   if (!ready) return null;
 

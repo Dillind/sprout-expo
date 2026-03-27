@@ -21,6 +21,9 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
             ...config.ios,
             supportsTablet: true,
             bundleIdentifier: isProd ? 'au.com.sprout.ios' : 'au.com.sprout.dev',
+            infoPlist: {
+                NSUserNotificationUsageDescription: '$(PRODUCT_NAME) sends reminders when your plants need care.',
+            },
         },
         android: {
             package: isProd ? 'au.com.sprout.android' : 'au.com.sprout.dev',
@@ -33,6 +36,12 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
         web: { output: 'server' },
         plugins: [
             'expo-router',
+            [
+                'expo-notifications',
+                {
+                    iosDisplayInForeground: true,
+                },
+            ],
             'expo-font',
             'expo-image',
             [
