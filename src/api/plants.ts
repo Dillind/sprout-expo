@@ -27,6 +27,12 @@ export type Plant = {
     location: string;
     wateringDays: number;
     remindersEnabled: boolean;
+    waterAmountMl: number | null;
+    fertilizeDays: number | null;
+    repotDays: number | null;
+    lastWateredAt: string | null;
+    lastFertilizedAt: string | null;
+    lastRepottedAt: string | null;
     createdAt: string;
     updatedAt: string;
 };
@@ -37,6 +43,9 @@ export type CreatePlantPayload = {
     location: string;
     wateringDays: number;
     remindersEnabled: boolean;
+    waterAmountMl?: number | null;
+    fertilizeDays?: number | null;
+    repotDays?: number | null;
 };
 
 export async function createPlant(payload: CreatePlantPayload): Promise<Plant> {
@@ -68,6 +77,9 @@ export type UpdatePlantPayload = {
     location?: string;
     wateringDays?: number;
     remindersEnabled?: boolean;
+    waterAmountMl?: number | null;
+    fertilizeDays?: number | null;
+    repotDays?: number | null;
 };
 
 export async function listPlants(): Promise<Plant[]> {
