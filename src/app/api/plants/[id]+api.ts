@@ -26,7 +26,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
         const body = await request.json();
         // Only allow safe fields - never let callers overwrite userId, id, createdAt
-        const { name, photoUrl, location, wateringDays, remindersEnabled } = body;
+        const { name, photoUrl, location, wateringDays, waterAmountMl, fertilizeDays, repotDays, remindersEnabled } = body;
         const plant = await prisma.plant.update({
             where: { id: params.id },
             data: {
@@ -34,6 +34,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
                 ...(photoUrl !== undefined && { photoUrl }),
                 ...(location !== undefined && { location }),
                 ...(wateringDays !== undefined && { wateringDays }),
+                ...(waterAmountMl !== undefined && { waterAmountMl }),
+                ...(fertilizeDays !== undefined && { fertilizeDays }),
+                ...(repotDays !== undefined && { repotDays }),
                 ...(remindersEnabled !== undefined && { remindersEnabled }),
             },
         });
