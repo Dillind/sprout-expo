@@ -44,3 +44,6 @@ app-example
 /android
 
 /src/generated/prisma
+
+# Git worktrees
+.worktrees/
