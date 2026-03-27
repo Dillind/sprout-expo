@@ -14,14 +14,60 @@ async function makeClient() {
         data: { session },
     } = await supabase.auth.getSession();
     if (!session) throw new Error('Not authenticated');
-    return createClient<paths>({
-        baseUrl: `${API_BASE}/`,
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.access_token}`,
-        },
+    return {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+    };
+}
+
+export type Plant = {
+    id: string;
+    userId: string;
+    name: string;
+    photoUrl: string | null;
+    location: string;
+    wateringDays: number;
+    remindersEnabled: boolean;
+    waterAmountMl: number | null;
+    fertilizeDays: number | null;
+    repotDays: number | null;
+    lastWateredAt: string | null;
+    lastFertilizedAt: string | null;
+    lastRepottedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type CreatePlantPayload = {
+    name: string;
+    photoUrl?: string | null;
+    location: string;
+    wateringDays: number;
+    remindersEnabled: boolean;
+    waterAmountMl?: number | null;
+    fertilizeDays?: number | null;
+    repotDays?: number | null;
+};
+
+export async function createPlant(payload: CreatePlantPayload): Promise<Plant> {
+    const headers = await getAuthHeaders();
+    const res = await fetch(`${API_BASE}/plants`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
     });
 }
+
+export type UpdatePlantPayload = {
+    name?: string;
+    photoUrl?: string | null;
+    location?: string;
+    wateringDays?: number;
+    remindersEnabled?: boolean;
+    waterAmountMl?: number | null;
+    fertilizeDays?: number | null;
+    repotDays?: number | null;
+};
 
 export async function listPlants(): Promise<Plant[]> {
     const client = await makeClient();

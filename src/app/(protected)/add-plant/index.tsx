@@ -65,9 +65,10 @@ export default function AddPlantStep1() {
                 </Pressable>
 
                 {/* Progress */}
-                <AppText size="xs" color="gray" className="mb-2 tracking-widest">STEP 1 OF 3</AppText>
+                <AppText size="xs" color="gray" className="mb-2 tracking-widest">STEP 1 OF 4</AppText>
                 <View className="flex-row gap-1.5 mb-6">
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
+                    <View className="flex-1 h-1 rounded-full bg-gray-200" />
                     <View className="flex-1 h-1 rounded-full bg-gray-200" />
                     <View className="flex-1 h-1 rounded-full bg-gray-200" />
                 </View>

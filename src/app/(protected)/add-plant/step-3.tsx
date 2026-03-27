@@ -1,12 +1,10 @@
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
-import { useCreatePlant } from '@/src/hooks/plants';
-import supabase from '@/src/lib/supabase';
 import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import { router } from 'expo-router';
 import { Leaf } from 'lucide-react-native';
 import React from 'react';
-import { Alert, Pressable, ScrollView, Switch, View } from 'react-native';
+import { Pressable, ScrollView, Switch, View } from 'react-native';
 
 function frequencyLabel(days: number): string {
     if (days === 1) return 'Every day';
@@ -16,75 +14,22 @@ function frequencyLabel(days: number): string {
     return `Every ${days} days`;
 }
 
-async function uploadPhoto(uri: string, userId: string): Promise<string | null> {
-    // Extract extension safely, handling query strings in URI
-    const uriWithoutQuery = uri.split('?')[0];
-    const ext = uriWithoutQuery.split('.').pop() ?? 'jpg';
-    const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext.toLowerCase()) ? ext.toLowerCase() : 'jpg';
-    const fileName = `${userId}/${Date.now()}.${safeExt}`;
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const { error } = await supabase.storage
-        .from('plant-photos')
-        .upload(fileName, blob, { contentType: `image/${safeExt}` });
-    if (error) return null;
-    const { data } = supabase.storage.from('plant-photos').getPublicUrl(fileName);
-    return data.publicUrl;
-}
-
 export default function AddPlantStep3() {
     const {
-        name, photoUri, location,
-        wateringDays, remindersEnabled,
-        setWateringDays, setRemindersEnabled, setPhotoUrl, reset,
+        wateringDays, waterAmountMl, remindersEnabled,
+        setWateringDays, setWaterAmountMl, setRemindersEnabled,
     } = useAddPlantStore();
-    const { mutateAsync, isPending } = useCreatePlant();
-
-    const handleSubmit = async () => {
-        if (isPending) return;
-        try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                Alert.alert('Session expired', 'Please sign in again.');
-                return;
-            }
-
-            let photoUrl: string | null = null;
-            if (photoUri) {
-                photoUrl = await uploadPhoto(photoUri, session.user.id);
-                if (!photoUrl) {
-                    Alert.alert('Photo upload failed', 'Your plant will be saved without a photo.');
-                }
-                setPhotoUrl(photoUrl);
-            }
-
-            const plant = await mutateAsync({
-                name,
-                photoUrl,
-                location,
-                wateringDays,
-                remindersEnabled,
-            });
-
-            reset();
-            router.replace({
-                pathname: '/(protected)/add-plant/success',
-                params: { plantName: plant.name, location: plant.location },
-            });
-        } catch {
-            // Error alert handled by useCreatePlant's onError callback
-        }
-    };
 
     return (
         <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 {/* Progress */}
-                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 3 OF 3</AppText>
+                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 3 OF 4</AppText>
                 <View className="flex-row gap-1.5 mb-6">
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
+                    <View className="flex-1 h-1 rounded-full bg-gray-200" />
                 </View>
 
                 <AppText size="md" font="bold" className="mb-6">Care{'\n'}Schedule</AppText>
@@ -115,6 +60,35 @@ export default function AddPlantStep3() {
                     <AppText size="xs" color="gray" align="center" className="mt-2">
                         {frequencyLabel(wateringDays)}
                     </AppText>
+                </View>
+
+                {/* Water Amount */}
+                <View className="bg-gray-50 rounded-2xl p-5 mb-4">
+                    <AppText size="sm" font="semiBold" className="mb-1">Water Amount</AppText>
+                    <AppText size="xs" color="gray" className="mb-4">How much water does it need?</AppText>
+                    <View className="flex-row items-center gap-3">
+                        <Pressable
+                            onPress={() => setWaterAmountMl(waterAmountMl !== null ? Math.max(0, waterAmountMl - 50) : null)}
+                            className="w-10 h-10 rounded-full bg-white items-center justify-center"
+                            style={{ borderWidth: 1, borderColor: COLORS.border }}
+                        >
+                            <AppText size="md" font="bold">−</AppText>
+                        </Pressable>
+                        <View className="flex-1 items-center">
+                            <AppText size="lg" font="bold">{waterAmountMl ?? '—'}</AppText>
+                            <AppText size="xs" color="gray">{waterAmountMl !== null ? 'ml' : 'not set'}</AppText>
+                        </View>
+                        <Pressable
+                            onPress={() => setWaterAmountMl((waterAmountMl ?? 0) + 50)}
+                            className="w-10 h-10 rounded-full bg-white items-center justify-center"
+                            style={{ borderWidth: 1, borderColor: COLORS.border }}
+                        >
+                            <AppText size="md" font="bold">+</AppText>
+                        </Pressable>
+                    </View>
+                    <Pressable onPress={() => setWaterAmountMl(null)} className="mt-3 items-center">
+                        <AppText size="xs" color="gray">Skip (not sure)</AppText>
+                    </Pressable>
                 </View>
 
                 {/* Reminders toggle */}
@@ -156,14 +130,11 @@ export default function AddPlantStep3() {
                     <AppText size="sm" font="bold">← Back</AppText>
                 </Pressable>
                 <Pressable
-                    onPress={handleSubmit}
-                    disabled={isPending}
+                    onPress={() => router.push('/(protected)/add-plant/step-4')}
                     className="flex-1 h-[52px] rounded-xl items-center justify-center"
-                    style={{ backgroundColor: isPending ? COLORS.border : COLORS.primaryDark }}
+                    style={{ backgroundColor: COLORS.primaryDark }}
                 >
-                    <AppText size="sm" font="bold" color="white">
-                        {isPending ? 'Saving...' : 'Finish Setup'}
-                    </AppText>
+                    <AppText size="sm" font="bold" color="white">Next Step →</AppText>
                 </Pressable>
             </View>
         </View>

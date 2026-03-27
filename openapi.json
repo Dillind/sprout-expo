@@ -21,7 +21,13 @@
                     "photoUrl": { "type": "string", "nullable": true },
                     "location": { "type": "string", "example": "living-room" },
                     "wateringDays": { "type": "integer", "example": 7 },
+                    "waterAmountMl": { "type": "integer", "nullable": true },
+                    "fertilizeDays": { "type": "integer", "nullable": true },
+                    "repotDays": { "type": "integer", "nullable": true },
                     "remindersEnabled": { "type": "boolean" },
+                    "lastWateredAt": { "type": "string", "format": "date-time", "nullable": true },
+                    "lastFertilizedAt": { "type": "string", "format": "date-time", "nullable": true },
+                    "lastRepottedAt": { "type": "string", "format": "date-time", "nullable": true },
                     "createdAt": { "type": "string", "format": "date-time" },
                     "updatedAt": { "type": "string", "format": "date-time" }
                 }
@@ -34,7 +40,43 @@
                     "photoUrl": { "type": "string", "nullable": true },
                     "location": { "type": "string" },
                     "wateringDays": { "type": "integer", "default": 7 },
+                    "waterAmountMl": { "type": "integer", "nullable": true },
+                    "fertilizeDays": { "type": "integer", "nullable": true },
+                    "repotDays": { "type": "integer", "nullable": true },
                     "remindersEnabled": { "type": "boolean", "default": false }
+                }
+            },
+            "UpdatePlantRequest": {
+                "type": "object",
+                "properties": {
+                    "name": { "type": "string" },
+                    "photoUrl": { "type": "string", "nullable": true },
+                    "location": { "type": "string" },
+                    "wateringDays": { "type": "integer" },
+                    "waterAmountMl": { "type": "integer", "nullable": true },
+                    "fertilizeDays": { "type": "integer", "nullable": true },
+                    "repotDays": { "type": "integer", "nullable": true },
+                    "remindersEnabled": { "type": "boolean" }
+                }
+            },
+            "PlantCareLog": {
+                "type": "object",
+                "required": ["id", "plantId", "userId", "type", "doneAt", "createdAt"],
+                "properties": {
+                    "id": { "type": "string" },
+                    "plantId": { "type": "string" },
+                    "userId": { "type": "string" },
+                    "type": { "type": "string", "enum": ["WATER", "FERTILIZE", "REPOT"] },
+                    "doneAt": { "type": "string", "format": "date-time" },
+                    "createdAt": { "type": "string", "format": "date-time" }
+                }
+            },
+            "LogCareActionRequest": {
+                "type": "object",
+                "required": ["type"],
+                "properties": {
+                    "type": { "type": "string", "enum": ["WATER", "FERTILIZE", "REPOT"] },
+                    "doneAt": { "type": "string", "format": "date-time" }
                 }
             }
         }
@@ -126,7 +168,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": { "$ref": "#/components/schemas/CreatePlantRequest" }
+                            "schema": { "$ref": "#/components/schemas/UpdatePlantRequest" }
                         }
                     }
                 },
@@ -155,6 +197,65 @@
                     "204": { "description": "Deleted" },
                     "401": { "description": "Unauthorized" },
                     "404": { "description": "Not found" }
+                }
+            }
+        },
+        "/plants/{id}/care-logs": {
+            "parameters": [
+                { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+            ],
+            "post": {
+                "summary": "Log a care action for a plant",
+                "operationId": "logCareAction",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": { "schema": { "$ref": "#/components/schemas/LogCareActionRequest" } }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Care log created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "log": { "$ref": "#/components/schemas/PlantCareLog" },
+                                        "plant": { "$ref": "#/components/schemas/Plant" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Invalid care type" },
+                    "401": { "description": "Unauthorized" },
+                    "404": { "description": "Plant not found" }
+                }
+            }
+        },
+        "/plants/{id}/care-logs/{logId}": {
+            "parameters": [
+                { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+                { "name": "logId", "in": "path", "required": true, "schema": { "type": "string" } }
+            ],
+            "delete": {
+                "summary": "Undo a care action",
+                "operationId": "undoCareAction",
+                "responses": {
+                    "200": {
+                        "description": "Log deleted and plant reverted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": { "plant": { "$ref": "#/components/schemas/Plant" } }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "404": { "description": "Log not found" }
                 }
             }
         }

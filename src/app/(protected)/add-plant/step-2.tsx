@@ -23,10 +23,11 @@ export default function AddPlantStep2() {
         <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 {/* Progress */}
-                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 2 OF 3</AppText>
+                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 2 OF 4</AppText>
                 <View className="flex-row gap-1.5 mb-6">
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
+                    <View className="flex-1 h-1 rounded-full bg-gray-200" />
                     <View className="flex-1 h-1 rounded-full bg-gray-200" />
                 </View>
 
