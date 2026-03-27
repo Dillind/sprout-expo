@@ -8,7 +8,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         if (!userId) return unauthorized();
 
         const log = await prisma.plantCareLog.findFirst({
-            where: { id: params.logId, userId },
+            where: { id: params.logId, userId, plantId: params.id },
         });
         if (!log) return notFound();
 

@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { Plant } from '@/src/api/plants';
-
-export type CareType = 'WATER' | 'FERTILIZE' | 'REPOT';
+import type { CareType } from '@/src/api/care-logs';
+export type { CareType };
 
 export type Task = {
     /** Deterministic ID: `{plantId}-{type}-{YYYY-MM-DD}` or `{plantId}-{type}-overdue` */

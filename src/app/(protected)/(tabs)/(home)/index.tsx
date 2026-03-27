@@ -4,7 +4,7 @@ import TaskList from '@/src/components/screens/home/TaskList';
 import { COLORS } from '@/src/constants/theme';
 import { useLogCareAction } from '@/src/hooks/care-logs';
 import { usePlants } from '@/src/hooks/plants';
-import { generateTasks, getTasksForDate, getWeekMonday, Task } from '@/src/utils/tasks';
+import { generateTasks, getTasksForDate, Task } from '@/src/utils/tasks';
 import dayjs, { Dayjs } from 'dayjs';
 import { router } from 'expo-router';
 import { Cloud, Plus } from 'lucide-react-native';
@@ -35,8 +35,7 @@ export default function HomeScreen() {
     const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
     const logCareAction = useLogCareAction();
 
-    // Generate tasks for current week + 30 days ahead
-    const weekStart = useMemo(() => getWeekMonday(dayjs()), []);
+    // Generate tasks for today + 30 days ahead
     const rangeEnd = useMemo(() => dayjs().add(30, 'day'), []);
 
     const allTasks = useMemo(

@@ -3,6 +3,10 @@ import { Plant } from './plants';
 
 const API_BASE = process.env.EXPO_PUBLIC_API_URL;
 
+if (!API_BASE) {
+    throw new Error('EXPO_PUBLIC_API_URL is not set');
+}
+
 async function getAuthHeaders(): Promise<Record<string, string>> {
     const {
         data: { session },
