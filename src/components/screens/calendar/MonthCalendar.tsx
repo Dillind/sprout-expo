@@ -5,7 +5,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
 
 type Props = {
     month: Dayjs;
@@ -113,6 +114,17 @@ export default function MonthCalendar({
     const today = dayjs().startOf('day');
     const taskMap = useMemo(() => getTasksByDateTypeMap(tasks), [tasks]);
 
+    const swipeGesture = Gesture.Pan()
+        .activeOffsetX([-20, 20])
+        .failOffsetY([-10, 10]) // yield to ScrollView if user is scrolling vertically
+        .onEnd((event) => {
+            if (event.translationX < -50) {
+                runOnJS(onNextMonth)();
+            } else if (event.translationX > 50) {
+                runOnJS(onPrevMonth)();
+            }
+        });
+
     const grid = useMemo(() => {
         const firstDay = month.startOf('month');
         const startPad = (firstDay.day() + 6) % 7;
@@ -125,6 +137,7 @@ export default function MonthCalendar({
     }, [month]);
 
     return (
+        <GestureDetector gesture={swipeGesture}>
         <View style={{ backgroundColor: '#fff', paddingBottom: 8 }}>
             {/* Month header */}
             <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
@@ -178,5 +191,6 @@ export default function MonthCalendar({
                 ))}
             </View>
         </View>
+        </GestureDetector>
     );
 }
