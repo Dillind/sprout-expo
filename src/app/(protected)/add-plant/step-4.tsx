@@ -4,7 +4,7 @@ import { COLORS } from '@/src/constants/theme';
 import supabase from '@/src/lib/supabase';
 import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import { decode } from 'base64-arraybuffer';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { router } from 'expo-router';
 import { Leaf } from 'lucide-react-native';
 import React, { useState } from 'react';
