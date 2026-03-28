@@ -29,6 +29,7 @@ model Plant {
   lastFertilizedAt DateTime? @map("last_fertilized_at")
   lastRepottedAt   DateTime? @map("last_repotted_at")
   careLogs         PlantCareLog[]
+  customTasks      CustomTask[]
 
   @@map("plants")
 }
@@ -45,4 +46,20 @@ model PlantCareLog {
   @@index([plantId])
   @@index([userId])
   @@map("plant_care_logs")
+}
+
+model CustomTask {
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  plantId     String?   @map("plant_id")
+  title       String
+  type        CareType
+  dueDate     DateTime  @map("due_date") @db.Date
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  plant       Plant?    @relation(fields: [plantId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([dueDate])
+  @@map("custom_tasks")
 }
