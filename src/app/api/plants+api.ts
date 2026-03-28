@@ -24,7 +24,16 @@ export async function POST(request: Request) {
         if (!userId) return unauthorized();
 
         const body = await request.json();
-        const { name, photoUrl, location, wateringDays, waterAmountMl, fertilizeDays, repotDays, remindersEnabled } = body;
+        const {
+            name,
+            photoUrl,
+            location,
+            wateringDays,
+            waterAmountMl,
+            fertilizeDays,
+            repotDays,
+            remindersEnabled,
+        } = body;
 
         if (!name || !location) {
             return Response.json({ error: 'name and location are required' }, { status: 400 });

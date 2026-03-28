@@ -35,11 +35,13 @@ Requires a dev server restart after this change.
 The `src/hooks/` directory does not yet exist and must be created. Two hooks:
 
 **`usePlants()`**
+
 - Calls `listPlants()` from `src/api/plants.ts`
 - Query key: `['plants']`
 - Returns `{ plants, isLoading, isError, isRefetching, refetch }` where `plants` is the renamed `data` field (typed as `Plant[]`, defaulting to `[]`)
 
 **`useCreatePlant()`**
+
 - Calls `createPlant(payload)` from `src/api/plants.ts`
 - On success: invalidates `['plants']` query so the home screen refetches automatically
 - On error: calls `Alert.alert('Error', 'Failed to save your plant. Please try again.')` in the `onError` mutation callback
@@ -48,6 +50,7 @@ The `src/hooks/` directory does not yet exist and must be created. Two hooks:
 ### 3. `HomeScreen` — Use `usePlants()`
 
 Replace manual `plants/loading/refreshing/error` state + `fetchPlants` callback with `usePlants()`. Map:
+
 - `isLoading` → initial load spinner
 - `isError` → error state with retry button (`refetch`)
 - `plants` → plant list passed to `FlatList`

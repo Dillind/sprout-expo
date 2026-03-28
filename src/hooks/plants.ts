@@ -1,4 +1,11 @@
-import { createPlant, CreatePlantPayload, listPlants, Plant, updatePlant, UpdatePlantPayload } from '@/src/api/plants';
+import {
+    createPlant,
+    CreatePlantPayload,
+    listPlants,
+    Plant,
+    updatePlant,
+    UpdatePlantPayload,
+} from '@/src/api/plants';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert } from 'react-native';
 import { toast } from 'sonner-native';
@@ -32,7 +39,7 @@ export function useUpdatePlant() {
             updatePlant(id, payload),
         onSuccess: (updatedPlant) => {
             queryClient.setQueryData(['plants'], (old: Plant[] | undefined) =>
-                (old ?? []).map((p) => (p.id === updatedPlant.id ? updatedPlant : p))
+                (old ?? []).map((p) => (p.id === updatedPlant.id ? updatedPlant : p)),
             );
         },
         onError: () => {

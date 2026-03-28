@@ -3,7 +3,5 @@ import { useAuth } from '../providers/AuthProvider';
 
 export default function Index() {
     const { session } = useAuth();
-    return (
-        <Redirect href={session ? '/(protected)/(tabs)/(home)' : '/(public)/(auth)'} />
-    )
+    return <Redirect href={session ? '/(protected)/(tabs)/(home)' : '/(public)/(auth)'} />;
 }

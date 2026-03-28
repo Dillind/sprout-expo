@@ -13,15 +13,16 @@ import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
 function WeatherPlaceholder() {
     return (
-        <View
-            className="mx-4 mb-4 rounded-2xl p-5"
-            style={{ backgroundColor: COLORS.primaryDark }}
-        >
+        <View className="mx-4 mb-4 rounded-2xl p-5" style={{ backgroundColor: COLORS.primaryDark }}>
             <View className="flex-row items-center gap-2 mb-2">
                 <Cloud size={18} color="rgba(255,255,255,0.8)" />
-                <AppText size="xs" color="white" style={{ opacity: 0.8 }}>Weather</AppText>
+                <AppText size="xs" color="white" style={{ opacity: 0.8 }}>
+                    Weather
+                </AppText>
             </View>
-            <AppText size="sm" font="bold" color="white">Weather coming soon</AppText>
+            <AppText size="sm" font="bold" color="white">
+                Weather coming soon
+            </AppText>
             <AppText size="xs" color="white" style={{ opacity: 0.7 }} className="mt-1">
                 We&apos;ll show local conditions to help you care for your plants.
             </AppText>
@@ -40,7 +41,7 @@ export default function HomeScreen() {
 
     const allTasks = useMemo(
         () => generateTasks(plants, dayjs().startOf('day'), rangeEnd),
-        [plants, rangeEnd]
+        [plants, rangeEnd],
     );
 
     // Tasks for selected date, overdue first
@@ -58,7 +59,7 @@ export default function HomeScreen() {
         setCompletingTaskId(task.id);
         logCareAction.mutate(
             { plantId: task.plantId, type: task.type },
-            { onSettled: () => setCompletingTaskId(null) }
+            { onSettled: () => setCompletingTaskId(null) },
         );
     };
 
@@ -69,7 +70,9 @@ export default function HomeScreen() {
                 className="flex-row items-center justify-between px-6 pt-14 pb-4 bg-white"
                 style={{ borderBottomWidth: 1, borderBottomColor: COLORS.border }}
             >
-                <AppText size="lg" font="bold">My Garden</AppText>
+                <AppText size="lg" font="bold">
+                    My Garden
+                </AppText>
                 <Pressable
                     onPress={() => router.push('/(protected)/add-plant')}
                     className="w-10 h-10 rounded-full items-center justify-center"
@@ -85,9 +88,13 @@ export default function HomeScreen() {
                 </View>
             ) : isError ? (
                 <View className="flex-1 items-center justify-center px-6">
-                    <AppText size="sm" color="gray" align="center" className="mb-4">Failed to load garden data</AppText>
+                    <AppText size="sm" color="gray" align="center" className="mb-4">
+                        Failed to load garden data
+                    </AppText>
                     <Pressable onPress={() => refetch()}>
-                        <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>Try again</AppText>
+                        <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>
+                            Try again
+                        </AppText>
                     </Pressable>
                 </View>
             ) : (
@@ -97,9 +104,15 @@ export default function HomeScreen() {
                     {/* This Week */}
                     <View className="bg-white mb-4 pt-2 pb-1" style={{ borderRadius: 0 }}>
                         <View className="flex-row items-center justify-between px-4 mb-1">
-                            <AppText size="sm" font="bold">This Week</AppText>
-                            <Pressable onPress={() => router.push('/(protected)/(tabs)/(calendar)')}>
-                                <AppText size="xs" style={{ color: COLORS.primaryDark }}>View Calendar</AppText>
+                            <AppText size="sm" font="bold">
+                                This Week
+                            </AppText>
+                            <Pressable
+                                onPress={() => router.push('/(protected)/(tabs)/(calendar)')}
+                            >
+                                <AppText size="xs" style={{ color: COLORS.primaryDark }}>
+                                    View Calendar
+                                </AppText>
                             </Pressable>
                         </View>
                         <WeekStrip

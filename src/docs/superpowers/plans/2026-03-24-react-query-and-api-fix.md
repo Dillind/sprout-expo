@@ -12,18 +12,19 @@
 
 ## File Map
 
-| Action | File | Responsibility |
-|--------|------|----------------|
-| Modify | `app.config.ts` | Enable server output mode for API routes |
-| Create | `src/hooks/plants.ts` | `usePlants()` query hook and `useCreatePlant()` mutation hook |
-| Modify | `src/app/(protected)/(tabs)/(home)/index.tsx` | Use `usePlants()` instead of manual state |
-| Modify | `src/app/(protected)/add-plant/step-3.tsx` | Use `useCreatePlant()` instead of manual state |
+| Action | File                                          | Responsibility                                                |
+| ------ | --------------------------------------------- | ------------------------------------------------------------- |
+| Modify | `app.config.ts`                               | Enable server output mode for API routes                      |
+| Create | `src/hooks/plants.ts`                         | `usePlants()` query hook and `useCreatePlant()` mutation hook |
+| Modify | `src/app/(protected)/(tabs)/(home)/index.tsx` | Use `usePlants()` instead of manual state                     |
+| Modify | `src/app/(protected)/add-plant/step-3.tsx`    | Use `useCreatePlant()` instead of manual state                |
 
 ---
 
 ## Task 1: Fix Expo Router API Routes
 
 **Files:**
+
 - Modify: `app.config.ts`
 
 - [ ] **Step 1: Add `web.output: 'server'` to the config**
@@ -45,6 +46,7 @@ plugins: [
 - [ ] **Step 2: Restart the dev server**
 
 Stop the running Expo server and restart:
+
 ```bash
 npx expo start
 ```
@@ -54,6 +56,7 @@ npx expo start
 ```bash
 curl -s http://localhost:8081/api/plants
 ```
+
 Expected output: `{"error":"Unauthorized"}` (JSON, not HTML)
 
 - [ ] **Step 4: Commit**
@@ -68,6 +71,7 @@ git commit -m "fix: enable Expo Router server output mode for API routes"
 ## Task 2: Create Plant Query Hooks
 
 **Files:**
+
 - Create: `src/hooks/plants.ts` (new file — `src/hooks/` directory must be created)
 
 - [ ] **Step 1: Create `src/hooks/plants.ts`**
@@ -110,6 +114,7 @@ export function useCreatePlant() {
 ```bash
 npx tsc --noEmit
 ```
+
 Expected: no errors
 
 - [ ] **Step 3: Commit**
@@ -124,6 +129,7 @@ git commit -m "feat: add usePlants and useCreatePlant hooks"
 ## Task 3: Update HomeScreen to Use `usePlants`
 
 **Files:**
+
 - Modify: `src/app/(protected)/(tabs)/(home)/index.tsx`
 
 - [ ] **Step 1: Replace manual state + fetch logic with `usePlants()`**
@@ -147,10 +153,13 @@ export default function HomeScreen() {
     return (
         <View className="flex-1" style={{ backgroundColor: COLORS.backgroundSecondary }}>
             {/* Header */}
-            <View className="flex-row items-center justify-between px-6 pt-14 pb-4 bg-white"
+            <View
+                className="flex-row items-center justify-between px-6 pt-14 pb-4 bg-white"
                 style={{ borderBottomWidth: 1, borderBottomColor: COLORS.border }}
             >
-                <AppText size="lg" font="bold">My Garden</AppText>
+                <AppText size="lg" font="bold">
+                    My Garden
+                </AppText>
                 <Pressable
                     onPress={() => router.push('/(protected)/add-plant')}
                     className="w-10 h-10 rounded-full items-center justify-center"
@@ -167,9 +176,13 @@ export default function HomeScreen() {
                 </View>
             ) : isError ? (
                 <View className="flex-1 items-center justify-center px-6">
-                    <AppText size="sm" color="gray" align="center" className="mb-4">Failed to load plants</AppText>
+                    <AppText size="sm" color="gray" align="center" className="mb-4">
+                        Failed to load plants
+                    </AppText>
                     <Pressable onPress={refetch}>
-                        <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>Try again</AppText>
+                        <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>
+                            Try again
+                        </AppText>
                     </Pressable>
                 </View>
             ) : (
@@ -200,6 +213,7 @@ Note: The `Plant` type import from `@/src/api/plants` is still needed for `Plant
 ```bash
 npx tsc --noEmit
 ```
+
 Expected: no errors
 
 - [ ] **Step 3: Verify in the running app**
@@ -218,6 +232,7 @@ git commit -m "feat: use usePlants hook in HomeScreen"
 ## Task 4: Update AddPlantStep3 to Use `useCreatePlant`
 
 **Files:**
+
 - Modify: `src/app/(protected)/add-plant/step-3.tsx`
 
 - [ ] **Step 1: Replace `submitting` state with `useCreatePlant()`**
@@ -229,6 +244,7 @@ const { mutateAsync, isPending } = useCreatePlant();
 ```
 
 Add the import at the top of the file:
+
 ```tsx
 import { useCreatePlant } from '@/src/hooks/plants';
 ```
@@ -243,7 +259,9 @@ Replace the entire `handleSubmit` function:
 const handleSubmit = async () => {
     if (isPending) return;
     try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+            data: { session },
+        } = await supabase.auth.getSession();
         if (!session) {
             Alert.alert('Session expired', 'Please sign in again.');
             return;
@@ -295,6 +313,7 @@ style={{ backgroundColor: isPending ? COLORS.border : COLORS.primaryDark }}
 ```bash
 npx tsc --noEmit
 ```
+
 Expected: no errors
 
 - [ ] **Step 5: Verify in the running app**

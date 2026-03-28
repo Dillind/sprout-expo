@@ -7,11 +7,11 @@ import { Pressable, View } from 'react-native';
 
 const LOCATION_LABELS: Record<string, string> = {
     'living-room': 'Living Room',
-    'bedroom': 'Bedroom',
-    'balcony': 'Balcony',
-    'office': 'Office',
-    'kitchen': 'Kitchen',
-    'bathroom': 'Bathroom',
+    bedroom: 'Bedroom',
+    balcony: 'Balcony',
+    office: 'Office',
+    kitchen: 'Kitchen',
+    bathroom: 'Bathroom',
 };
 
 export default function AddPlantSuccess() {
@@ -49,10 +49,14 @@ export default function AddPlantSuccess() {
                     className="w-full rounded-2xl p-5 mb-8"
                     style={{ backgroundColor: '#F0F7EC' }}
                 >
-                    <AppText size="sm" font="bold" className="mb-1">{plantName}</AppText>
+                    <AppText size="sm" font="bold" className="mb-1">
+                        {plantName}
+                    </AppText>
                     <View className="flex-row items-center gap-1.5">
                         <MapPin size={14} color={COLORS.textSecondary} />
-                        <AppText size="xs" color="gray">{locationLabel}</AppText>
+                        <AppText size="xs" color="gray">
+                            {locationLabel}
+                        </AppText>
                     </View>
                 </View>
 
@@ -63,14 +67,18 @@ export default function AddPlantSuccess() {
                         className="w-full h-[52px] rounded-xl items-center justify-center border-2"
                         style={{ borderColor: COLORS.primaryDark }}
                     >
-                        <AppText size="sm" font="bold">+ Add Another</AppText>
+                        <AppText size="sm" font="bold">
+                            + Add Another
+                        </AppText>
                     </Pressable>
                     <Pressable
                         onPress={() => router.replace('/(protected)/(tabs)/(my-garden)')}
                         className="w-full h-[52px] rounded-xl items-center justify-center"
                         style={{ backgroundColor: COLORS.primaryDark }}
                     >
-                        <AppText size="sm" font="bold" color="white">View Garden</AppText>
+                        <AppText size="sm" font="bold" color="white">
+                            View Garden
+                        </AppText>
                     </Pressable>
                 </View>
             </View>

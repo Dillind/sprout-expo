@@ -23,7 +23,9 @@ export default function AddPlantStep2() {
         <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 {/* Progress */}
-                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 2 OF 4</AppText>
+                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">
+                    STEP 2 OF 4
+                </AppText>
                 <View className="flex-row gap-1.5 mb-6">
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
@@ -31,7 +33,9 @@ export default function AddPlantStep2() {
                     <View className="flex-1 h-1 rounded-full bg-gray-200" />
                 </View>
 
-                <AppText size="md" font="bold" className="mb-6">Where does it{'\n'}live?</AppText>
+                <AppText size="md" font="bold" className="mb-6">
+                    Where does it{'\n'}live?
+                </AppText>
 
                 {/* Location grid */}
                 <View className="flex-row flex-wrap gap-3 mb-6">
@@ -51,9 +55,16 @@ export default function AddPlantStep2() {
                                     alignItems: 'flex-start',
                                 }}
                             >
-                                <Icon size={24} color={isSelected ? COLORS.primaryDark : COLORS.textSecondary} />
-                                <AppText size="sm" font="semiBold" className="mt-2">{label}</AppText>
-                                <AppText size="xs" color="gray">{sublabel}</AppText>
+                                <Icon
+                                    size={24}
+                                    color={isSelected ? COLORS.primaryDark : COLORS.textSecondary}
+                                />
+                                <AppText size="sm" font="semiBold" className="mt-2">
+                                    {label}
+                                </AppText>
+                                <AppText size="xs" color="gray">
+                                    {sublabel}
+                                </AppText>
                             </Pressable>
                         );
                     })}
@@ -75,8 +86,12 @@ export default function AddPlantStep2() {
                         }}
                     >
                         <Plus size={24} color={COLORS.textTertiary} />
-                        <AppText size="sm" font="semiBold" className="mt-2">Add Custom</AppText>
-                        <AppText size="xs" color="gray">Your space</AppText>
+                        <AppText size="sm" font="semiBold" className="mt-2">
+                            Add Custom
+                        </AppText>
+                        <AppText size="xs" color="gray">
+                            Your space
+                        </AppText>
                     </Pressable>
                 </View>
             </ScrollView>
@@ -88,7 +103,9 @@ export default function AddPlantStep2() {
                     className="flex-1 h-[52px] rounded-xl items-center justify-center border-2"
                     style={{ borderColor: COLORS.border }}
                 >
-                    <AppText size="sm" font="bold">← Back</AppText>
+                    <AppText size="sm" font="bold">
+                        ← Back
+                    </AppText>
                 </Pressable>
                 <Pressable
                     onPress={() => router.push('/(protected)/add-plant/step-3')}
@@ -96,7 +113,9 @@ export default function AddPlantStep2() {
                     className="flex-1 h-[52px] rounded-xl items-center justify-center"
                     style={{ backgroundColor: canProceed ? COLORS.primaryDark : COLORS.border }}
                 >
-                    <AppText size="sm" font="bold" color="white">Next Step →</AppText>
+                    <AppText size="sm" font="bold" color="white">
+                        Next Step →
+                    </AppText>
                 </Pressable>
             </View>
         </View>

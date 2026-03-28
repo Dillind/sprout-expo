@@ -15,7 +15,9 @@ const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function WeekStrip({ selectedDate, tasks, onSelectDate }: Props) {
     // Get Monday of current week (locale-independent)
-    const monday = dayjs().subtract((dayjs().day() + 6) % 7, 'day').startOf('day');
+    const monday = dayjs()
+        .subtract((dayjs().day() + 6) % 7, 'day')
+        .startOf('day');
     const today = dayjs().startOf('day');
 
     return (
@@ -38,24 +40,32 @@ export default function WeekStrip({ selectedDate, tasks, onSelectDate }: Props) 
                             paddingVertical: 8,
                             paddingHorizontal: 2,
                             borderRadius: 12,
-                            backgroundColor: isSelected ? COLORS.primaryDark : isToday ? '#F0F7EC' : 'transparent',
+                            backgroundColor: isSelected
+                                ? COLORS.primaryDark
+                                : isToday
+                                  ? '#F0F7EC'
+                                  : 'transparent',
                         }}
                     >
-                        <AppText
-                            size="xs"
-                            color={isSelected ? 'white' : 'gray'}
-                            className="mb-1"
-                        >
+                        <AppText size="xs" color={isSelected ? 'white' : 'gray'} className="mb-1">
                             {DAY_LABELS[i]}
                         </AppText>
-                        <AppText
-                            size="sm"
-                            font="bold"
-                            color={isSelected ? 'white' : 'black'}
-                        >
+                        <AppText size="sm" font="bold" color={isSelected ? 'white' : 'black'}>
                             {day.format('D')}
                         </AppText>
-                        <View style={{ width: 6, height: 6, marginTop: 4, borderRadius: 3, backgroundColor: hasTasks ? (hasOverdue ? '#E85D4A' : COLORS.primary) : 'transparent' }} />
+                        <View
+                            style={{
+                                width: 6,
+                                height: 6,
+                                marginTop: 4,
+                                borderRadius: 3,
+                                backgroundColor: hasTasks
+                                    ? hasOverdue
+                                        ? '#E85D4A'
+                                        : COLORS.primary
+                                    : 'transparent',
+                            }}
+                        />
                     </Pressable>
                 );
             })}

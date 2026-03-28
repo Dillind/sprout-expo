@@ -22,7 +22,7 @@ export default function CalendarScreen() {
 
     const allTasks = useMemo(
         () => generateTasks(plants, rangeStart, rangeEnd),
-        [plants, rangeStart, rangeEnd]
+        [plants, rangeStart, rangeEnd],
     );
 
     const selectedDateTasks = useMemo(() => {
@@ -39,7 +39,7 @@ export default function CalendarScreen() {
         setCompletingTaskId(task.id);
         logCareAction.mutate(
             { plantId: task.plantId, type: task.type },
-            { onSettled: () => setCompletingTaskId(null) }
+            { onSettled: () => setCompletingTaskId(null) },
         );
     };
 
@@ -50,7 +50,9 @@ export default function CalendarScreen() {
                 className="px-6 pt-14 pb-4 bg-white"
                 style={{ borderBottomWidth: 1, borderBottomColor: COLORS.border }}
             >
-                <AppText size="lg" font="bold">Calendar</AppText>
+                <AppText size="lg" font="bold">
+                    Calendar
+                </AppText>
             </View>
 
             {isLoading ? (
@@ -59,7 +61,9 @@ export default function CalendarScreen() {
                 </View>
             ) : isError ? (
                 <View className="flex-1 items-center justify-center px-6">
-                    <AppText size="sm" color="gray" align="center">Failed to load calendar data</AppText>
+                    <AppText size="sm" color="gray" align="center">
+                        Failed to load calendar data
+                    </AppText>
                 </View>
             ) : (
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -73,7 +77,12 @@ export default function CalendarScreen() {
                     />
 
                     <View
-                        style={{ height: 1, backgroundColor: COLORS.border, marginHorizontal: 16, marginVertical: 8 }}
+                        style={{
+                            height: 1,
+                            backgroundColor: COLORS.border,
+                            marginHorizontal: 16,
+                            marginVertical: 8,
+                        }}
                     />
 
                     <View className="px-4 pb-8">

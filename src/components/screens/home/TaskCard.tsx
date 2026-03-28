@@ -47,9 +47,12 @@ export default function TaskCard({ task, onComplete, isCompleting }: Props) {
             ) : (
                 <View
                     style={{
-                        width: 48, height: 48, borderRadius: 12,
+                        width: 48,
+                        height: 48,
+                        borderRadius: 12,
                         backgroundColor: `${careColor}20`,
-                        alignItems: 'center', justifyContent: 'center',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
                 >
                     <CareIcon type={task.type} size={22} color={careColor} />
@@ -59,10 +62,21 @@ export default function TaskCard({ task, onComplete, isCompleting }: Props) {
             {/* Task info */}
             <View className="flex-1">
                 <View className="flex-row items-center gap-2 mb-1">
-                    <AppText size="sm" font="semiBold">{task.plantName}</AppText>
+                    <AppText size="sm" font="semiBold">
+                        {task.plantName}
+                    </AppText>
                     {task.isOverdue && (
-                        <View style={{ backgroundColor: '#FDDEDD', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2 }}>
-                            <AppText size="xs" style={{ color: COLORS.error }}>Overdue</AppText>
+                        <View
+                            style={{
+                                backgroundColor: '#FDDEDD',
+                                borderRadius: 4,
+                                paddingHorizontal: 6,
+                                paddingVertical: 2,
+                            }}
+                        >
+                            <AppText size="xs" style={{ color: COLORS.error }}>
+                                Overdue
+                            </AppText>
                         </View>
                     )}
                 </View>
@@ -70,10 +84,14 @@ export default function TaskCard({ task, onComplete, isCompleting }: Props) {
                     style={{
                         alignSelf: 'flex-start',
                         backgroundColor: `${careColor}18`,
-                        borderRadius: 6, paddingHorizontal: 8, paddingVertical: 2,
+                        borderRadius: 6,
+                        paddingHorizontal: 8,
+                        paddingVertical: 2,
                     }}
                 >
-                    <AppText size="xs" style={{ color: careColor }}>{CARE_LABELS[task.type]}</AppText>
+                    <AppText size="xs" style={{ color: careColor }}>
+                        {CARE_LABELS[task.type]}
+                    </AppText>
                 </View>
             </View>
 
@@ -82,14 +100,16 @@ export default function TaskCard({ task, onComplete, isCompleting }: Props) {
                 onPress={() => onComplete(task)}
                 disabled={isCompleting}
                 style={{
-                    width: 36, height: 36, borderRadius: 18,
-                    borderWidth: 2, borderColor: isCompleting ? COLORS.border : careColor,
-                    alignItems: 'center', justifyContent: 'center',
+                    width: 36,
+                    height: 36,
+                    borderRadius: 18,
+                    borderWidth: 2,
+                    borderColor: isCompleting ? COLORS.border : careColor,
+                    alignItems: 'center',
+                    justifyContent: 'center',
                 }}
             >
-                {isCompleting ? (
-                    <ActivityIndicator size="small" color={careColor} />
-                ) : null}
+                {isCompleting ? <ActivityIndicator size="small" color={careColor} /> : null}
             </Pressable>
         </View>
     );

@@ -8,7 +8,7 @@ import { twMerge } from 'tailwind-merge';
  * - https://github.com/dcastil/tailwind-merge
  */
 export default function cn(...inputs: ClassValue[]): string {
-	return twMerge(clsx(inputs));
+    return twMerge(clsx(inputs));
 }
 
 /**

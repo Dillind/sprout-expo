@@ -13,7 +13,16 @@
         "schemas": {
             "Plant": {
                 "type": "object",
-                "required": ["id", "userId", "name", "location", "wateringDays", "remindersEnabled", "createdAt", "updatedAt"],
+                "required": [
+                    "id",
+                    "userId",
+                    "name",
+                    "location",
+                    "wateringDays",
+                    "remindersEnabled",
+                    "createdAt",
+                    "updatedAt"
+                ],
                 "properties": {
                     "id": { "type": "string" },
                     "userId": { "type": "string" },
@@ -26,7 +35,11 @@
                     "repotDays": { "type": "integer", "nullable": true },
                     "remindersEnabled": { "type": "boolean" },
                     "lastWateredAt": { "type": "string", "format": "date-time", "nullable": true },
-                    "lastFertilizedAt": { "type": "string", "format": "date-time", "nullable": true },
+                    "lastFertilizedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
                     "lastRepottedAt": { "type": "string", "format": "date-time", "nullable": true },
                     "createdAt": { "type": "string", "format": "date-time" },
                     "updatedAt": { "type": "string", "format": "date-time" }
@@ -210,7 +223,9 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": { "schema": { "$ref": "#/components/schemas/LogCareActionRequest" } }
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/LogCareActionRequest" }
+                        }
                     }
                 },
                 "responses": {
@@ -249,7 +264,9 @@
                             "application/json": {
                                 "schema": {
                                     "type": "object",
-                                    "properties": { "plant": { "$ref": "#/components/schemas/Plant" } }
+                                    "properties": {
+                                        "plant": { "$ref": "#/components/schemas/Plant" }
+                                    }
                                 }
                             }
                         }

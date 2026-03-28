@@ -11,7 +11,8 @@ import {
     Image,
     Pressable,
     ScrollView,
-    TextInput, TouchableOpacity,
+    TextInput,
+    TouchableOpacity,
     View,
 } from 'react-native';
 
@@ -35,7 +36,9 @@ export default function AddPlantStep1() {
         }
         setLoading(true);
         const result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true, aspect: [1, 1], quality: 0.8,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.8,
         });
         setLoading(false);
         if (!result.canceled) setPhotoUri(result.assets[0].uri);
@@ -49,7 +52,9 @@ export default function AddPlantStep1() {
         }
         setLoading(true);
         const result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true, aspect: [1, 1], quality: 0.8,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.8,
         });
         setLoading(false);
         if (!result.canceled) setPhotoUri(result.assets[0].uri);
@@ -60,12 +65,20 @@ export default function AddPlantStep1() {
     return (
         <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-                <Pressable onPress={() => { reset(); router.back(); }} className="pt-4 mb-3">
+                <Pressable
+                    onPress={() => {
+                        reset();
+                        router.back();
+                    }}
+                    className="pt-4 mb-3"
+                >
                     <ChevronLeft size={24} color={COLORS.textPrimary} />
                 </Pressable>
 
                 {/* Progress */}
-                <AppText size="xs" color="gray" className="mb-2 tracking-widest">STEP 1 OF 4</AppText>
+                <AppText size="xs" color="gray" className="mb-2 tracking-widest">
+                    STEP 1 OF 4
+                </AppText>
                 <View className="flex-row gap-1.5 mb-6">
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                     <View className="flex-1 h-1 rounded-full bg-gray-200" />
@@ -73,7 +86,9 @@ export default function AddPlantStep1() {
                     <View className="flex-1 h-1 rounded-full bg-gray-200" />
                 </View>
 
-                <AppText size="md" font="bold" className="mb-6">What are we{'\n'}growing?</AppText>
+                <AppText size="md" font="bold" className="mb-6">
+                    What are we{'\n'}growing?
+                </AppText>
 
                 {/* Photo picker */}
                 <TouchableOpacity
@@ -85,18 +100,28 @@ export default function AddPlantStep1() {
                     {loading ? (
                         <ActivityIndicator color={COLORS.primary} />
                     ) : photoUri ? (
-                        <Image source={{ uri: photoUri }} className="w-full h-full rounded-2xl" resizeMode="cover" />
+                        <Image
+                            source={{ uri: photoUri }}
+                            className="w-full h-full rounded-2xl"
+                            resizeMode="cover"
+                        />
                     ) : (
                         <View className="items-center gap-2">
                             <ImagePlus size={36} color={COLORS.primary} />
-                            <AppText size="sm" font="semiBold">Add a photo</AppText>
-                            <AppText size="xs" color="gray">Tap here to upload a photo of your plant</AppText>
+                            <AppText size="sm" font="semiBold">
+                                Add a photo
+                            </AppText>
+                            <AppText size="xs" color="gray">
+                                Tap here to upload a photo of your plant
+                            </AppText>
                         </View>
                     )}
                 </TouchableOpacity>
 
                 {/* Plant name */}
-                <AppText size="sm" font="semiBold" className="mb-2">Plant Name</AppText>
+                <AppText size="sm" font="semiBold" className="mb-2">
+                    Plant Name
+                </AppText>
                 <TextInput
                     value={name}
                     onChangeText={setName}
@@ -114,7 +139,9 @@ export default function AddPlantStep1() {
                     className="h-[52px] rounded-xl items-center justify-center"
                     style={{ backgroundColor: canProceed ? COLORS.primaryDark : COLORS.border }}
                 >
-                    <AppText size="sm" font="bold" color="white">Next →</AppText>
+                    <AppText size="sm" font="bold" color="white">
+                        Next →
+                    </AppText>
                 </Pressable>
             </View>
         </View>

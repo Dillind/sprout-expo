@@ -23,7 +23,9 @@ function frequencyLabel(days: number | null): string {
 async function uploadPhoto(uri: string, userId: string): Promise<string | null> {
     const uriWithoutQuery = uri.split('?')[0];
     const ext = uriWithoutQuery.split('.').pop() ?? 'jpg';
-    const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext.toLowerCase()) ? ext.toLowerCase() : 'jpg';
+    const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext.toLowerCase())
+        ? ext.toLowerCase()
+        : 'jpg';
     const fileName = `${userId}/${Date.now()}.${safeExt}`;
     const response = await fetch(uri);
     const blob = await response.blob();
@@ -37,17 +39,27 @@ async function uploadPhoto(uri: string, userId: string): Promise<string | null> 
 
 export default function AddPlantStep4() {
     const {
-        name, photoUri, location,
-        wateringDays, waterAmountMl, remindersEnabled,
-        fertilizeDays, repotDays,
-        setFertilizeDays, setRepotDays, setPhotoUrl, reset,
+        name,
+        photoUri,
+        location,
+        wateringDays,
+        waterAmountMl,
+        remindersEnabled,
+        fertilizeDays,
+        repotDays,
+        setFertilizeDays,
+        setRepotDays,
+        setPhotoUrl,
+        reset,
     } = useAddPlantStore();
     const [submitting, setSubmitting] = useState(false);
 
     const handleSubmit = async () => {
         setSubmitting(true);
         try {
-            const { data: { session } } = await supabase.auth.getSession();
+            const {
+                data: { session },
+            } = await supabase.auth.getSession();
             if (!session) {
                 Alert.alert('Session expired', 'Please sign in again.');
                 return;
@@ -90,7 +102,9 @@ export default function AddPlantStep4() {
         <View className="flex-1 bg-white">
             <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
                 {/* Progress */}
-                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">STEP 4 OF 4</AppText>
+                <AppText size="xs" color="gray" className="pt-4 mb-2 tracking-widest">
+                    STEP 4 OF 4
+                </AppText>
                 <View className="flex-row gap-1.5 mb-6">
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
@@ -98,68 +112,106 @@ export default function AddPlantStep4() {
                     <View className="flex-1 h-1 rounded-full bg-green-700" />
                 </View>
 
-                <AppText size="md" font="bold" className="mb-6">Advanced{'\n'}Care</AppText>
+                <AppText size="md" font="bold" className="mb-6">
+                    Advanced{'\n'}Care
+                </AppText>
 
                 {/* Fertilize stepper */}
                 <View className="bg-gray-50 rounded-2xl p-5 mb-4">
-                    <AppText size="sm" font="semiBold" className="mb-1">Fertilize Frequency</AppText>
+                    <AppText size="sm" font="semiBold" className="mb-1">
+                        Fertilize Frequency
+                    </AppText>
                     <AppText size="xs" color="gray" className="mb-4">
                         {frequencyLabel(fertilizeDays)}
                     </AppText>
                     <View className="flex-row items-center justify-between">
                         <Pressable
-                            onPress={() => setFertilizeDays(fertilizeDays !== null ? Math.max(7, fertilizeDays - 7) : 30)}
+                            onPress={() =>
+                                setFertilizeDays(
+                                    fertilizeDays !== null ? Math.max(7, fertilizeDays - 7) : 30,
+                                )
+                            }
                             className="w-10 h-10 rounded-full bg-white items-center justify-center"
                             style={{ borderWidth: 1, borderColor: COLORS.border }}
                         >
-                            <AppText size="md" font="bold">−</AppText>
+                            <AppText size="md" font="bold">
+                                −
+                            </AppText>
                         </Pressable>
                         <View className="items-center">
-                            <AppText size="lg" font="bold">{fertilizeDays ?? '—'}</AppText>
-                            <AppText size="xs" color="gray">{fertilizeDays !== null ? 'days' : 'disabled'}</AppText>
+                            <AppText size="lg" font="bold">
+                                {fertilizeDays ?? '—'}
+                            </AppText>
+                            <AppText size="xs" color="gray">
+                                {fertilizeDays !== null ? 'days' : 'disabled'}
+                            </AppText>
                         </View>
                         <Pressable
                             onPress={() => setFertilizeDays((fertilizeDays ?? 23) + 7)}
                             className="w-10 h-10 rounded-full bg-white items-center justify-center"
                             style={{ borderWidth: 1, borderColor: COLORS.border }}
                         >
-                            <AppText size="md" font="bold">+</AppText>
+                            <AppText size="md" font="bold">
+                                +
+                            </AppText>
                         </Pressable>
                     </View>
-                    <Pressable onPress={() => setFertilizeDays(fertilizeDays !== null ? null : 30)} className="mt-3 items-center">
+                    <Pressable
+                        onPress={() => setFertilizeDays(fertilizeDays !== null ? null : 30)}
+                        className="mt-3 items-center"
+                    >
                         <AppText size="xs" color="gray">
-                            {fertilizeDays !== null ? 'Disable fertilizing' : 'Enable (every 30 days)'}
+                            {fertilizeDays !== null
+                                ? 'Disable fertilizing'
+                                : 'Enable (every 30 days)'}
                         </AppText>
                     </Pressable>
                 </View>
 
                 {/* Repot stepper */}
                 <View className="bg-gray-50 rounded-2xl p-5 mb-4">
-                    <AppText size="sm" font="semiBold" className="mb-1">Repot Frequency</AppText>
+                    <AppText size="sm" font="semiBold" className="mb-1">
+                        Repot Frequency
+                    </AppText>
                     <AppText size="xs" color="gray" className="mb-4">
                         {frequencyLabel(repotDays)}
                     </AppText>
                     <View className="flex-row items-center justify-between">
                         <Pressable
-                            onPress={() => setRepotDays(repotDays !== null ? Math.max(30, repotDays - 30) : 365)}
+                            onPress={() =>
+                                setRepotDays(
+                                    repotDays !== null ? Math.max(30, repotDays - 30) : 365,
+                                )
+                            }
                             className="w-10 h-10 rounded-full bg-white items-center justify-center"
                             style={{ borderWidth: 1, borderColor: COLORS.border }}
                         >
-                            <AppText size="md" font="bold">−</AppText>
+                            <AppText size="md" font="bold">
+                                −
+                            </AppText>
                         </Pressable>
                         <View className="items-center">
-                            <AppText size="lg" font="bold">{repotDays ?? '—'}</AppText>
-                            <AppText size="xs" color="gray">{repotDays !== null ? 'days' : 'disabled'}</AppText>
+                            <AppText size="lg" font="bold">
+                                {repotDays ?? '—'}
+                            </AppText>
+                            <AppText size="xs" color="gray">
+                                {repotDays !== null ? 'days' : 'disabled'}
+                            </AppText>
                         </View>
                         <Pressable
                             onPress={() => setRepotDays((repotDays ?? 335) + 30)}
                             className="w-10 h-10 rounded-full bg-white items-center justify-center"
                             style={{ borderWidth: 1, borderColor: COLORS.border }}
                         >
-                            <AppText size="md" font="bold">+</AppText>
+                            <AppText size="md" font="bold">
+                                +
+                            </AppText>
                         </Pressable>
                     </View>
-                    <Pressable onPress={() => setRepotDays(repotDays !== null ? null : 365)} className="mt-3 items-center">
+                    <Pressable
+                        onPress={() => setRepotDays(repotDays !== null ? null : 365)}
+                        className="mt-3 items-center"
+                    >
                         <AppText size="xs" color="gray">
                             {repotDays !== null ? 'Disable repotting' : 'Enable (every 365 days)'}
                         </AppText>
@@ -173,9 +225,12 @@ export default function AddPlantStep4() {
                 >
                     <Leaf size={20} color={COLORS.primaryDark} />
                     <View className="flex-1">
-                        <AppText size="xs" font="semiBold" className="mb-1">Leafling says</AppText>
+                        <AppText size="xs" font="semiBold" className="mb-1">
+                            Leafling says
+                        </AppText>
                         <AppText size="xs" color="gray">
-                            Most houseplants benefit from fertilizing monthly in spring and summer. Repotting every 1–2 years keeps roots healthy.
+                            Most houseplants benefit from fertilizing monthly in spring and summer.
+                            Repotting every 1–2 years keeps roots healthy.
                         </AppText>
                     </View>
                 </View>
@@ -188,7 +243,9 @@ export default function AddPlantStep4() {
                     className="flex-1 h-[52px] rounded-xl items-center justify-center border-2"
                     style={{ borderColor: COLORS.border }}
                 >
-                    <AppText size="sm" font="bold">← Back</AppText>
+                    <AppText size="sm" font="bold">
+                        ← Back
+                    </AppText>
                 </Pressable>
                 <Pressable
                     onPress={handleSubmit}

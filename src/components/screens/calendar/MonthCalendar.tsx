@@ -23,7 +23,14 @@ const DOT_COLORS: Record<string, string> = {
 
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export default function MonthCalendar({ month, tasks, selectedDate, onSelectDate, onPrevMonth, onNextMonth }: Props) {
+export default function MonthCalendar({
+    month,
+    tasks,
+    selectedDate,
+    onSelectDate,
+    onPrevMonth,
+    onNextMonth,
+}: Props) {
     const today = dayjs().startOf('day');
     const taskMap = useMemo(() => getTasksByDateTypeMap(tasks), [tasks]);
 
@@ -49,14 +56,26 @@ export default function MonthCalendar({ month, tasks, selectedDate, onSelectDate
             <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
                 <Pressable
                     onPress={onPrevMonth}
-                    style={{ width: 36, height: 36, alignItems: 'center', justifyContent: 'center' }}
+                    style={{
+                        width: 36,
+                        height: 36,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
                 >
                     <ChevronLeft size={20} color={COLORS.textSecondary} />
                 </Pressable>
-                <AppText size="sm" font="bold">{month.format('MMMM YYYY')}</AppText>
+                <AppText size="sm" font="bold">
+                    {month.format('MMMM YYYY')}
+                </AppText>
                 <Pressable
                     onPress={onNextMonth}
-                    style={{ width: 36, height: 36, alignItems: 'center', justifyContent: 'center' }}
+                    style={{
+                        width: 36,
+                        height: 36,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
                 >
                     <ChevronRight size={20} color={COLORS.textSecondary} />
                 </Pressable>
@@ -66,7 +85,9 @@ export default function MonthCalendar({ month, tasks, selectedDate, onSelectDate
             <View className="flex-row px-2 mb-1">
                 {DAY_HEADERS.map((d) => (
                     <View key={d} style={{ flex: 1, alignItems: 'center' }}>
-                        <AppText size="xs" color="gray">{d}</AppText>
+                        <AppText size="xs" color="gray">
+                            {d}
+                        </AppText>
                     </View>
                 ))}
             </View>
@@ -103,7 +124,9 @@ export default function MonthCalendar({ month, tasks, selectedDate, onSelectDate
                                             borderRadius: 17,
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            backgroundColor: isSelected ? COLORS.primaryDark : 'transparent',
+                                            backgroundColor: isSelected
+                                                ? COLORS.primaryDark
+                                                : 'transparent',
                                             borderWidth: isToday && !isSelected ? 1.5 : 0,
                                             borderColor: COLORS.primaryDark,
                                         }}
@@ -119,15 +142,20 @@ export default function MonthCalendar({ month, tasks, selectedDate, onSelectDate
                                     {/* Care type dots */}
                                     {careTypes && careTypes.size > 0 && (
                                         <View className="flex-row gap-0.5 mt-0.5">
-                                            {Array.from(careTypes).slice(0, 3).map((type) => (
-                                                <View
-                                                    key={type}
-                                                    style={{
-                                                        width: 4, height: 4, borderRadius: 2,
-                                                        backgroundColor: DOT_COLORS[type] ?? COLORS.primary,
-                                                    }}
-                                                />
-                                            ))}
+                                            {Array.from(careTypes)
+                                                .slice(0, 3)
+                                                .map((type) => (
+                                                    <View
+                                                        key={type}
+                                                        style={{
+                                                            width: 4,
+                                                            height: 4,
+                                                            borderRadius: 2,
+                                                            backgroundColor:
+                                                                DOT_COLORS[type] ?? COLORS.primary,
+                                                        }}
+                                                    />
+                                                ))}
                                         </View>
                                     )}
                                 </Pressable>

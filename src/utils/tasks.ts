@@ -25,18 +25,30 @@ export function getWeekMonday(date: Dayjs): Dayjs {
  * Overdue tasks (past nextDue) are pinned to rangeStart with isOverdue=true.
  * One overdue task per plant+type (not stacked).
  */
-export function generateTasks(
-    plants: Plant[],
-    rangeStart: Dayjs,
-    rangeEnd: Dayjs
-): Task[] {
+export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayjs): Task[] {
     const tasks: Task[] = [];
 
     for (const plant of plants) {
-        const careConfigs: Array<{ type: CareType; intervalDays: number | null; lastAt: string | null }> = [
-            { type: 'WATER', intervalDays: plant.wateringDays, lastAt: plant.lastWateredAt ?? null },
-            { type: 'FERTILIZE', intervalDays: plant.fertilizeDays ?? null, lastAt: plant.lastFertilizedAt ?? null },
-            { type: 'REPOT', intervalDays: plant.repotDays ?? null, lastAt: plant.lastRepottedAt ?? null },
+        const careConfigs: Array<{
+            type: CareType;
+            intervalDays: number | null;
+            lastAt: string | null;
+        }> = [
+            {
+                type: 'WATER',
+                intervalDays: plant.wateringDays,
+                lastAt: plant.lastWateredAt ?? null,
+            },
+            {
+                type: 'FERTILIZE',
+                intervalDays: plant.fertilizeDays ?? null,
+                lastAt: plant.lastFertilizedAt ?? null,
+            },
+            {
+                type: 'REPOT',
+                intervalDays: plant.repotDays ?? null,
+                lastAt: plant.lastRepottedAt ?? null,
+            },
         ];
 
         for (const { type, intervalDays, lastAt } of careConfigs) {

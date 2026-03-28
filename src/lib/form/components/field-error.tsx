@@ -8,9 +8,7 @@ type Props = {
 const FieldError = ({ error }: Props) => {
     if (!error) return null;
 
-    return (
-        <AppText className="text-red-500 text-sm mt-1">{error}</AppText>
-    );
+    return <AppText className="text-red-500 text-sm mt-1">{error}</AppText>;
 };
 
 export default FieldError;

@@ -31,7 +31,7 @@ export type PlantCareLog = {
 
 export async function logCareAction(
     plantId: string,
-    payload: { type: CareType; doneAt?: string }
+    payload: { type: CareType; doneAt?: string },
 ): Promise<{ log: PlantCareLog; plant: Plant }> {
     const headers = await getAuthHeaders();
     const res = await fetch(`${API_BASE}/plants/${plantId}/care-logs`, {
@@ -51,10 +51,7 @@ export async function logCareAction(
     return res.json();
 }
 
-export async function undoCareAction(
-    plantId: string,
-    logId: string
-): Promise<{ plant: Plant }> {
+export async function undoCareAction(plantId: string, logId: string): Promise<{ plant: Plant }> {
     const headers = await getAuthHeaders();
     const res = await fetch(`${API_BASE}/plants/${plantId}/care-logs/${logId}`, {
         method: 'DELETE',

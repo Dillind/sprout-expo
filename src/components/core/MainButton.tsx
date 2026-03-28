@@ -5,28 +5,25 @@ import React from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
 import AppText from './AppText';
 
-const buttonVariants = cva(
-    'flex-row items-center justify-center rounded-full',
-    {
-        variants: {
-            variant: {
-                primary: 'bg-core-primary shadow-md',
-                secondary: 'bg-white border border-core-black-200',
-                text: 'bg-transparent',
-            },
-            size: {
-                xs: 'px-3 py-2 min-w-[88px]',
-                sm: 'px-[18px] py-3',
-                md: 'px-6 py-3',
-                lg: 'px-10 py-3',
-            },
+const buttonVariants = cva('flex-row items-center justify-center rounded-full', {
+    variants: {
+        variant: {
+            primary: 'bg-core-primary shadow-md',
+            secondary: 'bg-white border border-core-black-200',
+            text: 'bg-transparent',
         },
-        defaultVariants: {
-            variant: 'primary',
-            size: 'md',
+        size: {
+            xs: 'px-3 py-2 min-w-[88px]',
+            sm: 'px-[18px] py-3',
+            md: 'px-6 py-3',
+            lg: 'px-10 py-3',
         },
-    }
-);
+    },
+    defaultVariants: {
+        variant: 'primary',
+        size: 'md',
+    },
+});
 
 const textColorMap = {
     primary: 'white',
@@ -77,7 +74,7 @@ const MainButton = ({
     const buttonClass = cn(
         buttonVariants({ variant, size }),
         isDisabled && 'opacity-50',
-        className
+        className,
     );
 
     const content = (

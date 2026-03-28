@@ -22,19 +22,21 @@ export async function requestNotificationPermissions(): Promise<boolean> {
 }
 
 function getNextDueDate(plant: Plant, type: CareType): Date | null {
-    const intervalDays = type === 'WATER'
-        ? plant.wateringDays
-        : type === 'FERTILIZE'
-        ? plant.fertilizeDays
-        : plant.repotDays;
+    const intervalDays =
+        type === 'WATER'
+            ? plant.wateringDays
+            : type === 'FERTILIZE'
+              ? plant.fertilizeDays
+              : plant.repotDays;
 
     if (!intervalDays) return null;
 
-    const lastAt = type === 'WATER'
-        ? plant.lastWateredAt
-        : type === 'FERTILIZE'
-        ? plant.lastFertilizedAt
-        : plant.lastRepottedAt;
+    const lastAt =
+        type === 'WATER'
+            ? plant.lastWateredAt
+            : type === 'FERTILIZE'
+              ? plant.lastFertilizedAt
+              : plant.lastRepottedAt;
 
     const base = lastAt ? dayjs(lastAt) : dayjs(plant.createdAt);
     const nextDue = base.add(intervalDays, 'day').hour(9).minute(0).second(0).millisecond(0);

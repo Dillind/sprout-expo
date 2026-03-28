@@ -20,10 +20,16 @@ function PlantCard({ plant }: { plant: Plant }) {
                 <Leaf size={22} color={COLORS.primaryDark} />
             </View>
             <View className="flex-1">
-                <AppText size="sm" font="semiBold">{plant.name}</AppText>
-                <AppText size="xs" color="gray">{plant.location}</AppText>
+                <AppText size="sm" font="semiBold">
+                    {plant.name}
+                </AppText>
+                <AppText size="xs" color="gray">
+                    {plant.location}
+                </AppText>
             </View>
-            <AppText size="xs" color="gray">Every {plant.wateringDays}d</AppText>
+            <AppText size="xs" color="gray">
+                Every {plant.wateringDays}d
+            </AppText>
         </View>
     );
 }
@@ -37,8 +43,12 @@ function EmptyState() {
             >
                 <Leaf size={36} color={COLORS.primary} />
             </View>
-            <AppText size="md" font="semiBold" className="mb-1">No plants yet</AppText>
-            <AppText size="sm" color="gray" align="center">Add your first plant to get started</AppText>
+            <AppText size="md" font="semiBold" className="mb-1">
+                No plants yet
+            </AppText>
+            <AppText size="sm" color="gray" align="center">
+                Add your first plant to get started
+            </AppText>
         </View>
     );
 }
@@ -53,7 +63,9 @@ export default function MyGardenScreen() {
                 className="flex-row items-center justify-between px-6 pt-14 pb-4 bg-white"
                 style={{ borderBottomWidth: 1, borderBottomColor: COLORS.border }}
             >
-                <AppText size="lg" font="bold">My Garden</AppText>
+                <AppText size="lg" font="bold">
+                    My Garden
+                </AppText>
                 <Pressable
                     onPress={() => router.push('/(protected)/add-plant')}
                     className="w-10 h-10 rounded-full items-center justify-center"
@@ -69,9 +81,13 @@ export default function MyGardenScreen() {
                 </View>
             ) : isError ? (
                 <View className="flex-1 items-center justify-center px-6">
-                    <AppText size="sm" color="gray" align="center" className="mb-4">Failed to load plants</AppText>
+                    <AppText size="sm" color="gray" align="center" className="mb-4">
+                        Failed to load plants
+                    </AppText>
                     <Pressable onPress={() => refetch()}>
-                        <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>Try again</AppText>
+                        <AppText size="sm" font="semiBold" style={{ color: COLORS.primaryDark }}>
+                            Try again
+                        </AppText>
                     </Pressable>
                 </View>
             ) : (

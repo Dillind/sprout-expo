@@ -1,12 +1,12 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import React from 'react';
+import { Text, View } from 'react-native';
 
 const ParralaxScrollView = () => {
-  return (
-    <View>
-      <Text>ParralaxScrollView</Text>
-    </View>
-  )
-}
+    return (
+        <View>
+            <Text>ParralaxScrollView</Text>
+        </View>
+    );
+};
 
-export default ParralaxScrollView
+export default ParralaxScrollView;

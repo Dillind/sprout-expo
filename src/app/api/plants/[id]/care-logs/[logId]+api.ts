@@ -2,7 +2,10 @@ import { getUserId, notFound, unauthorized } from '@/src/app/api/_utils';
 import prisma from '@/src/lib/prisma';
 import { CareType } from '@prisma/client';
 
-export async function DELETE(request: Request, { params }: { params: { id: string; logId: string } }) {
+export async function DELETE(
+    request: Request,
+    { params }: { params: { id: string; logId: string } },
+) {
     try {
         const userId = await getUserId(request);
         if (!userId) return unauthorized();

@@ -13,11 +13,18 @@ export function useLogCareAction() {
     const queryClient = useQueryClient();
 
     const undoMutation = useMutation({
-        mutationFn: ({ plantId, logId, type }: { plantId: string; logId: string; type: CareType }) =>
-            undoCareAction(plantId, logId),
+        mutationFn: ({
+            plantId,
+            logId,
+            type,
+        }: {
+            plantId: string;
+            logId: string;
+            type: CareType;
+        }) => undoCareAction(plantId, logId),
         onSuccess: ({ plant }, { type }) => {
             queryClient.setQueryData(['plants'], (old: Plant[] | undefined) =>
-                (old ?? []).map((p) => (p.id === plant.id ? plant : p))
+                (old ?? []).map((p) => (p.id === plant.id ? plant : p)),
             );
             // Cancel the notification that was just scheduled for this care type
             cancelCareNotification(plant.id, type);
@@ -28,12 +35,19 @@ export function useLogCareAction() {
     });
 
     return useMutation({
-        mutationFn: ({ plantId, type, doneAt }: { plantId: string; type: CareType; doneAt?: string }) =>
-            logCareAction(plantId, { type, doneAt }),
+        mutationFn: ({
+            plantId,
+            type,
+            doneAt,
+        }: {
+            plantId: string;
+            type: CareType;
+            doneAt?: string;
+        }) => logCareAction(plantId, { type, doneAt }),
         onSuccess: ({ log, plant }) => {
             // Update the plant in cache with new lastXAt value
             queryClient.setQueryData(['plants'], (old: Plant[] | undefined) =>
-                (old ?? []).map((p) => (p.id === plant.id ? plant : p))
+                (old ?? []).map((p) => (p.id === plant.id ? plant : p)),
             );
 
             // Schedule next notification if reminders are enabled
@@ -50,7 +64,12 @@ export function useLogCareAction() {
                 duration: 5000,
                 action: {
                     label: 'Undo',
-                    onClick: () => undoMutation.mutate({ plantId: log.plantId, logId: log.id, type: log.type as CareType }),
+                    onClick: () =>
+                        undoMutation.mutate({
+                            plantId: log.plantId,
+                            logId: log.id,
+                            type: log.type as CareType,
+                        }),
                 },
             });
         },

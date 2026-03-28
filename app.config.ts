@@ -22,7 +22,8 @@ const getConfig = ({ config }: ConfigContext): ExpoConfig => {
             supportsTablet: true,
             bundleIdentifier: isProd ? 'au.com.sprout.ios' : 'au.com.sprout.dev',
             infoPlist: {
-                NSUserNotificationUsageDescription: '$(PRODUCT_NAME) sends reminders when your plants need care.',
+                NSUserNotificationUsageDescription:
+                    '$(PRODUCT_NAME) sends reminders when your plants need care.',
             },
         },
         android: {

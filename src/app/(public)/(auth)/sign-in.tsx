@@ -19,16 +19,20 @@ type FormData = z.infer<typeof schema>;
 export default function SignInScreen() {
     const [error, setError] = useState<string | null>(null);
 
-    const { control,
+    const {
+        control,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<FormData>({
-        resolver: zodResolver(schema)
+        resolver: zodResolver(schema),
     });
 
     async function onSubmit(data: FormData) {
         setError(null);
-        const { error } = await supabase.auth.signInWithPassword({ email: data.email, password: data.password });
+        const { error } = await supabase.auth.signInWithPassword({
+            email: data.email,
+            password: data.password,
+        });
         if (error) setError(error.message);
     }
 
@@ -56,7 +60,8 @@ export default function SignInScreen() {
                             />
                             <FieldError error={errors.email?.message as string} />
                         </View>
-                    )} />
+                    )}
+                />
                 <Controller
                     control={control}
                     name="password"
@@ -74,16 +79,34 @@ export default function SignInScreen() {
                             />
                             <FieldError error={errors.password?.message as string} />
                         </View>
-                    )} />
+                    )}
+                />
                 {error && <AppText className="text-red-500 text-sm text-center">{error}</AppText>}
-                <Pressable onPress={handleSubmit(onSubmit)} disabled={isSubmitting} className="h-[52px] bg-green-700 rounded-xl items-center justify-center">
-                    {isSubmitting ? <ActivityIndicator color="white" /> : <AppText className="text-white font-semibold text-base">Sign in</AppText>}
+                <Pressable
+                    onPress={handleSubmit(onSubmit)}
+                    disabled={isSubmitting}
+                    className="h-[52px] bg-green-700 rounded-xl items-center justify-center"
+                >
+                    {isSubmitting ? (
+                        <ActivityIndicator color="white" />
+                    ) : (
+                        <AppText className="text-white font-semibold text-base">Sign in</AppText>
+                    )}
                 </Pressable>
-                <Pressable onPress={() => router.push('/(public)/(auth)/forgot-password')} className="items-center">
+                <Pressable
+                    onPress={() => router.push('/(public)/(auth)/forgot-password')}
+                    className="items-center"
+                >
                     <AppText className="text-sm text-gray-500">Forgot password?</AppText>
                 </Pressable>
-                <Pressable onPress={() => router.push('/(public)/(auth)/sign-up')} className="items-center">
-                    <AppText className="text-sm text-gray-500">Don&apos;t have an account? <AppText className="text-green-700 font-medium">Sign up</AppText></AppText>
+                <Pressable
+                    onPress={() => router.push('/(public)/(auth)/sign-up')}
+                    className="items-center"
+                >
+                    <AppText className="text-sm text-gray-500">
+                        Don&apos;t have an account?{' '}
+                        <AppText className="text-green-700 font-medium">Sign up</AppText>
+                    </AppText>
                 </Pressable>
             </View>
         </View>

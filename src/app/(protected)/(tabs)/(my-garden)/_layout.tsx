@@ -1,11 +1,11 @@
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 export default function MyGardenLayout() {
-  return (
-    <>
-      <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }} />
-    </>
-  )
+    return (
+        <>
+            <StatusBar style="dark" />
+            <Stack screenOptions={{ headerShown: false }} />
+        </>
+    );
 }

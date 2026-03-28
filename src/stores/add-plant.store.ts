@@ -2,8 +2,8 @@ import { create } from 'zustand';
 
 type AddPlantState = {
     name: string;
-    photoUri: string | null;   // local URI from image picker
-    photoUrl: string | null;   // Supabase Storage URL after upload
+    photoUri: string | null; // local URI from image picker
+    photoUrl: string | null; // Supabase Storage URL after upload
     location: string;
     wateringDays: number;
     remindersEnabled: boolean;

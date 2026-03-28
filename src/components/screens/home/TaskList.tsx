@@ -16,12 +16,16 @@ export default function TaskList({ tasks, onCompleteTask, completingTaskId, titl
     return (
         <View>
             {title && (
-                <AppText size="sm" font="bold" className="mb-3">{title}</AppText>
+                <AppText size="sm" font="bold" className="mb-3">
+                    {title}
+                </AppText>
             )}
             {tasks.length === 0 ? (
                 <View className="items-center py-8">
                     <Leaf size={28} color="#9CD374" />
-                    <AppText size="sm" color="gray" className="mt-2">All caught up!</AppText>
+                    <AppText size="sm" color="gray" className="mt-2">
+                        All caught up!
+                    </AppText>
                 </View>
             ) : (
                 tasks.map((task) => (
