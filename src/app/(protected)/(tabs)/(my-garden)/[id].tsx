@@ -3,6 +3,7 @@ import { COLORS } from '@/src/constants/theme';
 import { useLogCareAction } from '@/src/hooks/care-logs';
 import { usePlants, useDeletePlant } from '@/src/hooks/plants';
 import { getPlantHealth, getNextWaterLabel, HEALTH_COLORS } from '@/src/utils/plant-health';
+import { getPlantPhotoUrl } from '@/src/utils/plant-photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ChevronLeft, Droplets, Flower2, Leaf, MapPin, Pencil, RefreshCw } from 'lucide-react-native';
 import React, { useState } from 'react';
@@ -30,6 +31,7 @@ export default function PlantDetailScreen() {
     const [logging, setLogging] = useState(false);
 
     const plant = plants.find((p) => p.id === id);
+    const heroUrl = getPlantPhotoUrl(plant?.photoUrl, 800, 560);
 
     if (isLoading) {
         return (
@@ -90,9 +92,9 @@ export default function PlantDetailScreen() {
             <ScrollView showsVerticalScrollIndicator={false}>
                 {/* Hero photo */}
                 <View style={{ position: 'relative' }}>
-                    {plant.photoUrl ? (
+                    {heroUrl ? (
                         <Image
-                            source={{ uri: plant.photoUrl }}
+                            source={{ uri: heroUrl }}
                             style={{ width: '100%', height: 280 }}
                             resizeMode="cover"
                         />
