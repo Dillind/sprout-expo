@@ -48,7 +48,11 @@ export function useCreateCustomTask() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (payload: CreateCustomTaskPayload) => createCustomTask(payload),
-        onSuccess: () => {
+        onSuccess: (newTask) => {
+            queryClient.setQueriesData<CustomTask[]>(
+                { queryKey: ['custom-tasks'] },
+                (old) => (old ? [...old, newTask] : [newTask]),
+            );
             queryClient.invalidateQueries({ queryKey: ['custom-tasks'] });
             toast.success('Task added!');
         },
@@ -63,7 +67,11 @@ export function useUpdateCustomTask() {
     return useMutation({
         mutationFn: ({ id, payload }: { id: string; payload: UpdateCustomTaskPayload }) =>
             updateCustomTask(id, payload),
-        onSuccess: () => {
+        onSuccess: (updatedTask) => {
+            queryClient.setQueriesData<CustomTask[]>(
+                { queryKey: ['custom-tasks'] },
+                (old) => old?.map((t) => (t.id === updatedTask.id ? updatedTask : t)) ?? [],
+            );
             queryClient.invalidateQueries({ queryKey: ['custom-tasks'] });
         },
         onError: () => {
@@ -76,7 +84,11 @@ export function useDeleteCustomTask() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (id: string) => deleteCustomTask(id),
-        onSuccess: () => {
+        onSuccess: (_, id) => {
+            queryClient.setQueriesData<CustomTask[]>(
+                { queryKey: ['custom-tasks'] },
+                (old) => old?.filter((t) => t.id !== id) ?? [],
+            );
             queryClient.invalidateQueries({ queryKey: ['custom-tasks'] });
             toast.success('Task deleted.');
         },
