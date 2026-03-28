@@ -4,102 +4,64 @@
  */
 
 export interface paths {
-    "/plants": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
+    '/plants': {
         /** List plants for authenticated user */
-        get: operations["listPlants"];
-        put?: never;
+        get: operations['listPlants'];
         /** Create a plant */
-        post: operations["createPlant"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        post: operations['createPlant'];
     };
-    "/plants/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
+    '/plants/{id}': {
         /** Get a plant by ID */
-        get: operations["getPlant"];
-        put?: never;
-        post?: never;
+        get: operations['getPlant'];
         /** Delete a plant */
-        delete: operations["deletePlant"];
-        options?: never;
-        head?: never;
+        delete: operations['deletePlant'];
         /** Update a plant */
-        patch: operations["updatePlant"];
-        trace?: never;
-    };
-    "/plants/{id}/care-logs": {
+        patch: operations['updatePlant'];
         parameters: {
-            query?: never;
-            header?: never;
             path: {
                 id: string;
             };
-            cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** Log a care action for a plant */
-        post: operations["logCareAction"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
     };
-    "/plants/{id}/care-logs/{logId}": {
+    '/plants/{id}/care-logs': {
+        /** Log a care action for a plant */
+        post: operations['logCareAction'];
         parameters: {
-            query?: never;
-            header?: never;
+            path: {
+                id: string;
+            };
+        };
+    };
+    '/plants/{id}/care-logs/{logId}': {
+        /** Undo a care action */
+        delete: operations['undoCareAction'];
+        parameters: {
             path: {
                 id: string;
                 logId: string;
             };
-            cookie?: never;
         };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Undo a care action */
-        delete: operations["undoCareAction"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
     };
 }
+
 export type webhooks = Record<string, never>;
+
 export interface components {
     schemas: {
         Plant: {
-            id?: string;
-            userId?: string;
+            id: string;
+            userId: string;
             /** @example Monstera Deliciosa */
-            name?: string;
+            name: string;
             photoUrl?: string | null;
             /** @example living-room */
-            location?: string;
+            location: string;
             /** @example 7 */
-            wateringDays?: number;
+            wateringDays: number;
             waterAmountMl?: number | null;
             fertilizeDays?: number | null;
             repotDays?: number | null;
-            remindersEnabled?: boolean;
+            remindersEnabled: boolean;
             /** Format: date-time */
             lastWateredAt?: string | null;
             /** Format: date-time */
@@ -107,21 +69,21 @@ export interface components {
             /** Format: date-time */
             lastRepottedAt?: string | null;
             /** Format: date-time */
-            createdAt?: string;
+            createdAt: string;
             /** Format: date-time */
-            updatedAt?: string;
+            updatedAt: string;
         };
         CreatePlantRequest: {
             name: string;
             photoUrl?: string | null;
             location: string;
             /** @default 7 */
-            wateringDays: number;
+            wateringDays?: number;
             waterAmountMl?: number | null;
             fertilizeDays?: number | null;
             repotDays?: number | null;
             /** @default false */
-            remindersEnabled: boolean;
+            remindersEnabled?: boolean;
         };
         UpdatePlantRequest: {
             name?: string;
@@ -138,7 +100,7 @@ export interface components {
             plantId: string;
             userId: string;
             /** @enum {string} */
-            type: "WATER" | "FERTILIZE" | "REPOT";
+            type: 'WATER' | 'FERTILIZE' | 'REPOT';
             /** Format: date-time */
             doneAt: string;
             /** Format: date-time */
@@ -146,7 +108,7 @@ export interface components {
         };
         LogCareActionRequest: {
             /** @enum {string} */
-            type: "WATER" | "FERTILIZE" | "REPOT";
+            type: 'WATER' | 'FERTILIZE' | 'REPOT';
             /** Format: date-time */
             doneAt?: string;
         };
@@ -157,273 +119,194 @@ export interface components {
     headers: never;
     pathItems: never;
 }
+
 export type $defs = Record<string, never>;
+
+export type external = Record<string, never>;
+
 export interface operations {
+    /** List plants for authenticated user */
     listPlants: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
         responses: {
             /** @description Array of plants */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": {
-                        plants?: components["schemas"]["Plant"][];
+                    'application/json': {
+                        plants?: components['schemas']['Plant'][];
                     };
                 };
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };
+    /** Create a plant */
     createPlant: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreatePlantRequest"];
+                'application/json': components['schemas']['CreatePlantRequest'];
             };
         };
         responses: {
             /** @description Plant created */
             201: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": {
-                        plant?: components["schemas"]["Plant"];
+                    'application/json': {
+                        plant?: components['schemas']['Plant'];
                     };
                 };
             };
             /** @description Missing required fields */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };
+    /** Get a plant by ID */
     getPlant: {
         parameters: {
-            query?: never;
-            header?: never;
             path: {
                 id: string;
             };
-            cookie?: never;
         };
-        requestBody?: never;
         responses: {
             /** @description Plant */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": {
-                        plant?: components["schemas"]["Plant"];
+                    'application/json': {
+                        plant?: components['schemas']['Plant'];
                     };
                 };
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Not found */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };
+    /** Delete a plant */
     deletePlant: {
         parameters: {
-            query?: never;
-            header?: never;
             path: {
                 id: string;
             };
-            cookie?: never;
         };
-        requestBody?: never;
         responses: {
             /** @description Deleted */
             204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Not found */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };
+    /** Update a plant */
     updatePlant: {
         parameters: {
-            query?: never;
-            header?: never;
             path: {
                 id: string;
             };
-            cookie?: never;
         };
         requestBody?: {
             content: {
-                "application/json": components["schemas"]["UpdatePlantRequest"];
+                'application/json': components['schemas']['UpdatePlantRequest'];
             };
         };
         responses: {
             /** @description Updated plant */
             200: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    'application/json': {
+                        plant?: components['schemas']['Plant'];
+                    };
                 };
-                content?: never;
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Not found */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };
+    /** Log a care action for a plant */
     logCareAction: {
         parameters: {
-            query?: never;
-            header?: never;
             path: {
                 id: string;
             };
-            cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["LogCareActionRequest"];
+                'application/json': components['schemas']['LogCareActionRequest'];
             };
         };
         responses: {
             /** @description Care log created */
             201: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": {
-                        log?: components["schemas"]["PlantCareLog"];
-                        plant?: components["schemas"]["Plant"];
+                    'application/json': {
+                        log?: components['schemas']['PlantCareLog'];
+                        plant?: components['schemas']['Plant'];
                     };
                 };
             };
             /** @description Invalid care type */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Plant not found */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };
+    /** Undo a care action */
     undoCareAction: {
         parameters: {
-            query?: never;
-            header?: never;
             path: {
                 id: string;
                 logId: string;
             };
-            cookie?: never;
         };
-        requestBody?: never;
         responses: {
             /** @description Log deleted and plant reverted */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
                 content: {
-                    "application/json": {
-                        plant?: components["schemas"]["Plant"];
+                    'application/json': {
+                        plant?: components['schemas']['Plant'];
                     };
                 };
             };
             /** @description Unauthorized */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
             /** @description Log not found */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+                content: never;
             };
         };
     };

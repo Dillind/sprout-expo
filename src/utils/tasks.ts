@@ -34,7 +34,7 @@ export function generateTasks(
 
     for (const plant of plants) {
         const careConfigs: Array<{ type: CareType; intervalDays: number | null; lastAt: string | null }> = [
-            { type: 'WATER', intervalDays: plant.wateringDays, lastAt: plant.lastWateredAt },
+            { type: 'WATER', intervalDays: plant.wateringDays, lastAt: plant.lastWateredAt ?? null },
             { type: 'FERTILIZE', intervalDays: plant.fertilizeDays ?? null, lastAt: plant.lastFertilizedAt ?? null },
             { type: 'REPOT', intervalDays: plant.repotDays ?? null, lastAt: plant.lastRepottedAt ?? null },
         ];
@@ -54,7 +54,7 @@ export function generateTasks(
                     id: `${plant.id}-${type}-overdue`,
                     plantId: plant.id,
                     plantName: plant.name,
-                    plantPhotoUrl: plant.photoUrl,
+                    plantPhotoUrl: plant.photoUrl ?? null,
                     type,
                     dueDate: rangeStart.toISOString(),
                     isOverdue: true,
@@ -69,7 +69,7 @@ export function generateTasks(
                         id: `${plant.id}-${type}-${nextDue.format('YYYY-MM-DD')}`,
                         plantId: plant.id,
                         plantName: plant.name,
-                        plantPhotoUrl: plant.photoUrl,
+                        plantPhotoUrl: plant.photoUrl ?? null,
                         type,
                         dueDate: nextDue.toISOString(),
                         isOverdue: false,
