@@ -1,6 +1,7 @@
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
 import { Task } from '@/src/utils/tasks';
+import { getPlantPhotoUrl } from '@/src/utils/plant-photo';
 import { Droplets, Flower2, RefreshCw, Check } from 'lucide-react-native';
 import React, { useCallback } from 'react';
 import { Image, Pressable, View } from 'react-native';
@@ -61,6 +62,7 @@ export default function TaskCard({ task, onToggle, isCompleting, onOptions }: Pr
 
     const displayLabel = task.title ?? CARE_LABELS[task.type];
     const activeCareColor = CARE_COLORS[task.type] ?? COLORS.primary;
+    const photoUrl = getPlantPhotoUrl(task.plantPhotoUrl, 96, 96);
 
     return (
         <View
@@ -78,9 +80,9 @@ export default function TaskCard({ task, onToggle, isCompleting, onOptions }: Pr
             }}
         >
             {/* Plant photo or icon */}
-            {task.plantPhotoUrl ? (
+            {photoUrl ? (
                 <Image
-                    source={{ uri: task.plantPhotoUrl }}
+                    source={{ uri: photoUrl }}
                     style={{ width: 48, height: 48, borderRadius: 12 }}
                     resizeMode="cover"
                 />
