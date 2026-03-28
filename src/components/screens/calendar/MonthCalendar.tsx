@@ -6,7 +6,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
+import Animated, {
+    runOnJS,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+} from 'react-native-reanimated';
 
 type Props = {
     month: Dayjs;
@@ -70,7 +75,7 @@ function DayCell({
                     animatedStyle,
                 ]}
             >
-                <AppText size="xs" font="bold" color={isSelected ? 'white' : 'black'}>
+                <AppText size="base" font="bold" color={isSelected ? 'white' : 'black'}>
                     {day.format('D')}
                 </AppText>
             </Animated.View>
@@ -138,59 +143,69 @@ export default function MonthCalendar({
 
     return (
         <GestureDetector gesture={swipeGesture}>
-        <View style={{ backgroundColor: '#fff', paddingBottom: 8 }}>
-            {/* Month header */}
-            <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
-                <Pressable
-                    onPress={onPrevMonth}
-                    style={{ width: 36, height: 36, alignItems: 'center', justifyContent: 'center' }}
-                >
-                    <ChevronLeft size={20} color={COLORS.textSecondary} />
-                </Pressable>
-                <AppText size="sm" font="bold">
-                    {month.format('MMMM YYYY')}
-                </AppText>
-                <Pressable
-                    onPress={onNextMonth}
-                    style={{ width: 36, height: 36, alignItems: 'center', justifyContent: 'center' }}
-                >
-                    <ChevronRight size={20} color={COLORS.textSecondary} />
-                </Pressable>
-            </View>
+            <View style={{ backgroundColor: '#fff', paddingBottom: 8 }}>
+                {/* Month header */}
+                <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
+                    <Pressable
+                        onPress={onPrevMonth}
+                        style={{
+                            width: 36,
+                            height: 36,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <ChevronLeft size={20} color={COLORS.textSecondary} />
+                    </Pressable>
+                    <AppText size="sm" font="bold">
+                        {month.format('MMMM YYYY')}
+                    </AppText>
+                    <Pressable
+                        onPress={onNextMonth}
+                        style={{
+                            width: 36,
+                            height: 36,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <ChevronRight size={20} color={COLORS.textSecondary} />
+                    </Pressable>
+                </View>
 
-            {/* Day-of-week headers */}
-            <View className="flex-row px-2 mb-1">
-                {DAY_HEADERS.map((d) => (
-                    <View key={d} style={{ flex: 1, alignItems: 'center' }}>
-                        <AppText size="xs" color="gray">
-                            {d}
-                        </AppText>
-                    </View>
-                ))}
-            </View>
+                {/* Day-of-week headers */}
+                <View className="flex-row px-2 mb-1">
+                    {DAY_HEADERS.map((d) => (
+                        <View key={d} style={{ flex: 1, alignItems: 'center' }}>
+                            <AppText size="xs" color="gray">
+                                {d}
+                            </AppText>
+                        </View>
+                    ))}
+                </View>
 
-            {/* Grid */}
-            <View className="px-2">
-                {Array.from({ length: Math.ceil(grid.length / 7) }, (_, row) => (
-                    <View key={row} className="flex-row mb-1">
-                        {grid.slice(row * 7, row * 7 + 7).map((day, col) => {
-                            if (!day) return <View key={col} style={{ flex: 1, height: 52 }} />;
-                            const dateStr = day.format('YYYY-MM-DD');
-                            return (
-                                <DayCell
-                                    key={dateStr}
-                                    day={day}
-                                    isSelected={dateStr === selectedDate.format('YYYY-MM-DD')}
-                                    isToday={dateStr === today.format('YYYY-MM-DD')}
-                                    careTypes={taskMap.get(dateStr)}
-                                    onPress={() => onSelectDate(day)}
-                                />
-                            );
-                        })}
-                    </View>
-                ))}
+                {/* Grid */}
+                <View className="px-2">
+                    {Array.from({ length: Math.ceil(grid.length / 7) }, (_, row) => (
+                        <View key={row} className="flex-row mb-1">
+                            {grid.slice(row * 7, row * 7 + 7).map((day, col) => {
+                                if (!day) return <View key={col} style={{ flex: 1, height: 52 }} />;
+                                const dateStr = day.format('YYYY-MM-DD');
+                                return (
+                                    <DayCell
+                                        key={dateStr}
+                                        day={day}
+                                        isSelected={dateStr === selectedDate.format('YYYY-MM-DD')}
+                                        isToday={dateStr === today.format('YYYY-MM-DD')}
+                                        careTypes={taskMap.get(dateStr)}
+                                        onPress={() => onSelectDate(day)}
+                                    />
+                                );
+                            })}
+                        </View>
+                    ))}
+                </View>
             </View>
-        </View>
         </GestureDetector>
     );
 }

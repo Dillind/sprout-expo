@@ -1,3 +1,4 @@
+import CloseIcon from '@/src/assets/icons/close-icon';
 import { COLORS } from '@/src/constants/theme';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -18,7 +19,7 @@ const BaseSheetHeader = ({ title, handleClose }: Props) => {
                 {title}
             </AppText>
             <Pressable onPress={handleClose} style={styles.closeButton}>
-                X
+                <CloseIcon width={14} height={14} color={COLORS.black} />
             </Pressable>
         </View>
     );
