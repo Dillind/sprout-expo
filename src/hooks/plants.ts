@@ -1,6 +1,7 @@
 import {
     createPlant,
     CreatePlantPayload,
+    deletePlant,
     listPlants,
     Plant,
     updatePlant,
@@ -44,6 +45,21 @@ export function useUpdatePlant() {
         },
         onError: () => {
             Alert.alert('Error', 'Failed to update plant. Please try again.');
+        },
+    });
+}
+
+export function useDeletePlant() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => deletePlant(id),
+        onSuccess: (_, id) => {
+            queryClient.setQueryData<Plant[]>(['plants'], (old) =>
+                (old ?? []).filter((p) => p.id !== id),
+            );
+        },
+        onError: () => {
+            Alert.alert('Error', 'Failed to delete plant. Please try again.');
         },
     });
 }
