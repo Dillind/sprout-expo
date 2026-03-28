@@ -47,3 +47,4 @@ app-example
 
 # Git worktrees
 .worktrees/
+.superpowers/
