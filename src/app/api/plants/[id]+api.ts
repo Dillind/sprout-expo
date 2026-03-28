@@ -35,6 +35,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
             fertilizeDays,
             repotDays,
             remindersEnabled,
+            lastWateredAt,
+            lastFertilizedAt,
+            lastRepottedAt,
         } = body;
         const plant = await prisma.plant.update({
             where: { id: params.id },
@@ -47,6 +50,15 @@ export async function PATCH(request: Request, { params }: { params: { id: string
                 ...(fertilizeDays !== undefined && { fertilizeDays }),
                 ...(repotDays !== undefined && { repotDays }),
                 ...(remindersEnabled !== undefined && { remindersEnabled }),
+                ...(lastWateredAt !== undefined && {
+                    lastWateredAt: lastWateredAt ? new Date(lastWateredAt) : null,
+                }),
+                ...(lastFertilizedAt !== undefined && {
+                    lastFertilizedAt: lastFertilizedAt ? new Date(lastFertilizedAt) : null,
+                }),
+                ...(lastRepottedAt !== undefined && {
+                    lastRepottedAt: lastRepottedAt ? new Date(lastRepottedAt) : null,
+                }),
             },
         });
 

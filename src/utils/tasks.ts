@@ -4,15 +4,18 @@ import type { CareType } from '@/src/api/care-logs';
 export type { CareType };
 
 export type Task = {
-    /** Deterministic ID: `{plantId}-{type}-{YYYY-MM-DD}` or `{plantId}-{type}-overdue` */
+    /** Deterministic ID: `{plantId}-{type}-{YYYY-MM-DD}` or `{plantId}-{type}-overdue` for auto tasks; `custom-{id}` for custom tasks */
     id: string;
-    plantId: string;
-    plantName: string;
+    plantId: string | null;
+    plantName: string; // falls back to task title when no plant linked
     plantPhotoUrl: string | null;
     type: CareType;
     /** ISO date-time string */
     dueDate: string;
     isOverdue: boolean;
+    source: 'auto' | 'custom';
+    customTaskId?: string; // set when source === 'custom'
+    title?: string;        // custom task label, shown in place of care type label when set
 };
 
 /** Get the Monday of the week containing the given date (locale-independent) */
@@ -70,6 +73,7 @@ export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayj
                     type,
                     dueDate: rangeStart.toISOString(),
                     isOverdue: true,
+                    source: 'auto',
                 });
                 continue;
             }
@@ -85,6 +89,7 @@ export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayj
                         type,
                         dueDate: nextDue.toISOString(),
                         isOverdue: false,
+                        source: 'auto',
                     });
                 }
                 nextDue = nextDue.add(intervalDays, 'day');
@@ -123,4 +128,16 @@ export function getTasksByDateTypeMap(tasks: Task[]): Map<string, Set<CareType>>
         map.get(d)!.add(task.type);
     }
     return map;
+}
+
+/**
+ * Merge auto-generated and custom tasks into a single array sorted by dueDate.
+ * Overdue tasks are sorted to the front regardless of source.
+ */
+export function mergeTaskLists(autoTasks: Task[], customTasks: Task[]): Task[] {
+    return [...autoTasks, ...customTasks].sort((a, b) => {
+        if (a.isOverdue && !b.isOverdue) return -1;
+        if (!a.isOverdue && b.isOverdue) return 1;
+        return dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf();
+    });
 }
