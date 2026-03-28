@@ -4,7 +4,8 @@ import TaskList from '@/src/components/screens/home/TaskList';
 import { COLORS } from '@/src/constants/theme';
 import { useLogCareAction } from '@/src/hooks/care-logs';
 import { usePlants } from '@/src/hooks/plants';
-import { generateTasks, getTasksForDate, Task } from '@/src/utils/tasks';
+import { useCustomTasks } from '@/src/hooks/custom-tasks';
+import { generateTasks, getTasksForDate, mergeTaskLists, Task } from '@/src/utils/tasks';
 import dayjs, { Dayjs } from 'dayjs';
 import { router } from 'expo-router';
 import { Cloud, Plus } from 'lucide-react-native';
@@ -39,9 +40,11 @@ export default function HomeScreen() {
     // Generate tasks for today + 30 days ahead
     const rangeEnd = useMemo(() => dayjs().add(30, 'day'), []);
 
+    const { customTasks } = useCustomTasks(dayjs().startOf('day'), rangeEnd);
+
     const allTasks = useMemo(
-        () => generateTasks(plants, dayjs().startOf('day'), rangeEnd),
-        [plants, rangeEnd],
+        () => mergeTaskLists(generateTasks(plants, dayjs().startOf('day'), rangeEnd), customTasks),
+        [plants, rangeEnd, customTasks],
     );
 
     // Tasks for selected date, overdue first
