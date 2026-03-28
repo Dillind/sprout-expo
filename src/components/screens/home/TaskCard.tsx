@@ -17,6 +17,7 @@ type Props = {
     task: Task;
     onComplete: (task: Task) => void;
     isCompleting?: boolean;
+    onOptions?: (task: Task) => void;
 };
 
 const CARE_COLORS: Record<string, string> = {
@@ -37,7 +38,7 @@ function CareIcon({ type, size, color }: { type: string; size: number; color: st
     return <RefreshCw size={size} color={color} />;
 }
 
-export default function TaskCard({ task, onComplete, isCompleting }: Props) {
+export default function TaskCard({ task, onComplete, isCompleting, onOptions }: Props) {
     const careColor = CARE_COLORS[task.type] ?? COLORS.primary;
     const checkScale = useSharedValue(0);
     const cardOpacity = useSharedValue(1);
@@ -141,6 +142,13 @@ export default function TaskCard({ task, onComplete, isCompleting }: Props) {
                     </AppText>
                 </View>
             </View>
+
+            {/* Options button */}
+            {onOptions && (
+                <Pressable onPress={() => onOptions(task)} hitSlop={8} style={{ padding: 4 }}>
+                    <AppText size="sm" color="gray" style={{ letterSpacing: 1 }}>···</AppText>
+                </Pressable>
+            )}
 
             {/* Complete button */}
             <Pressable

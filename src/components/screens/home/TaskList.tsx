@@ -10,9 +10,10 @@ type Props = {
     onCompleteTask: (task: Task) => void;
     completingTaskId?: string;
     title?: string;
+    onOptions?: (task: Task) => void;
 };
 
-export default function TaskList({ tasks, onCompleteTask, completingTaskId, title }: Props) {
+export default function TaskList({ tasks, onCompleteTask, completingTaskId, title, onOptions }: Props) {
     return (
         <View>
             {title && (
@@ -34,6 +35,7 @@ export default function TaskList({ tasks, onCompleteTask, completingTaskId, titl
                         task={task}
                         onComplete={onCompleteTask}
                         isCompleting={completingTaskId === task.id}
+                        onOptions={onOptions}
                     />
                 ))
             )}

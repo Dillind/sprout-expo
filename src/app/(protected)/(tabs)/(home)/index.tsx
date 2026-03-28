@@ -3,14 +3,14 @@ import WeekStrip from '@/src/components/screens/home/WeekStrip';
 import TaskList from '@/src/components/screens/home/TaskList';
 import { COLORS } from '@/src/constants/theme';
 import { useLogCareAction } from '@/src/hooks/care-logs';
-import { usePlants } from '@/src/hooks/plants';
-import { useCustomTasks } from '@/src/hooks/custom-tasks';
+import { useCustomTasks, useUpdateCustomTask, useDeleteCustomTask } from '@/src/hooks/custom-tasks';
+import { usePlants, useUpdatePlant } from '@/src/hooks/plants';
 import { generateTasks, getTasksForDate, mergeTaskLists, Task } from '@/src/utils/tasks';
 import dayjs, { Dayjs } from 'dayjs';
 import { router } from 'expo-router';
 import { Cloud, Plus } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 
 function WeatherPlaceholder() {
     return (
@@ -36,6 +36,9 @@ export default function HomeScreen() {
     const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
     const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
     const logCareAction = useLogCareAction();
+    const updateCustomTask = useUpdateCustomTask();
+    const deleteCustomTask = useDeleteCustomTask();
+    const updatePlant = useUpdatePlant();
 
     // Generate tasks for today + 30 days ahead
     const rangeEnd = useMemo(() => dayjs().add(30, 'day'), []);
@@ -64,6 +67,73 @@ export default function HomeScreen() {
             { plantId: task.plantId!, type: task.type },
             { onSettled: () => setCompletingTaskId(null) },
         );
+    };
+
+    const handleTaskOptions = (task: Task) => {
+        const isCustom = task.source === 'custom';
+
+        const pushTask = (days: number) => {
+            const newDate = dayjs(task.dueDate).add(days, 'day');
+            if (isCustom && task.customTaskId) {
+                updateCustomTask.mutate({
+                    id: task.customTaskId,
+                    payload: { dueDate: newDate.format('YYYY-MM-DD') },
+                });
+            } else if (task.plantId) {
+                const plant = plants.find((p) => p.id === task.plantId);
+                if (!plant) return;
+                const intervalDays =
+                    task.type === 'WATER'
+                        ? plant.wateringDays
+                        : task.type === 'FERTILIZE'
+                          ? plant.fertilizeDays
+                          : plant.repotDays;
+                if (!intervalDays) return;
+                const newLastAt = newDate.subtract(intervalDays, 'day').toISOString();
+                const fieldMap: Record<string, string> = {
+                    WATER: 'lastWateredAt',
+                    FERTILIZE: 'lastFertilizedAt',
+                    REPOT: 'lastRepottedAt',
+                };
+                updatePlant.mutate({
+                    id: task.plantId,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    payload: { [fieldMap[task.type]]: newLastAt } as any,
+                });
+            }
+        };
+
+        const reschedule = () => {
+            Alert.alert('Reschedule task', 'Push to:', [
+                { text: 'Tomorrow', onPress: () => pushTask(1) },
+                { text: 'In 3 days', onPress: () => pushTask(3) },
+                { text: 'Next week', onPress: () => pushTask(7) },
+                { text: 'Cancel', style: 'cancel' },
+            ]);
+        };
+
+        const buttons: Parameters<typeof Alert.alert>[2] = [
+            { text: 'Reschedule', onPress: reschedule },
+        ];
+
+        if (!isCustom && task.plantId) {
+            buttons.push({
+                text: 'Edit plant schedule',
+                onPress: () => router.push(`/(protected)/add-plant?plantId=${task.plantId}`),
+            });
+        }
+
+        if (isCustom && task.customTaskId) {
+            buttons.push({
+                text: 'Delete task',
+                style: 'destructive',
+                onPress: () => deleteCustomTask.mutate(task.customTaskId!),
+            });
+        }
+
+        buttons.push({ text: 'Cancel', style: 'cancel' });
+
+        Alert.alert('Task options', task.plantName, buttons);
     };
 
     return (
@@ -132,6 +202,7 @@ export default function HomeScreen() {
                             tasks={todayTasks}
                             onCompleteTask={handleCompleteTask}
                             completingTaskId={completingTaskId ?? undefined}
+                            onOptions={handleTaskOptions}
                         />
                     </View>
                 </ScrollView>
