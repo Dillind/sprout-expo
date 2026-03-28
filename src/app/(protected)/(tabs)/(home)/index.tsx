@@ -58,7 +58,7 @@ export default function HomeScreen() {
     const handleCompleteTask = (task: Task) => {
         setCompletingTaskId(task.id);
         logCareAction.mutate(
-            { plantId: task.plantId, type: task.type },
+            { plantId: task.plantId!, type: task.type },
             { onSettled: () => setCompletingTaskId(null) },
         );
     };
