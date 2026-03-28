@@ -3,6 +3,7 @@ import { TextStyle } from 'react-native';
 export const COLORS = {
     black: '#000000',
     white: '#ffffff',
+    greyLight100: '#DAD8D8',
 
     // Primary Green Palette
     primary: '#2D6B49',

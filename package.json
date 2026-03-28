@@ -52,6 +52,7 @@
         "expo-system-ui": "~55.0.9",
         "expo-web-browser": "~55.0.9",
         "lucide-react-native": "^0.577.0",
+        "moti": "^0.30.0",
         "openapi-fetch": "^0.17.0",
         "pg": "^8.20.0",
         "react": "19.2.0",
