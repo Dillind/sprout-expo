@@ -25,7 +25,7 @@ export default function CalendarScreen() {
     const updatePlant = useUpdatePlant();
     const addTaskSheetRef = useRef<TrueSheet>(null);
 
-    const rangeStart = useMemo(() => dayjs().startOf('day'), []);
+    const rangeStart = useMemo(() => month.startOf('month'), [month]);
     const rangeEnd = useMemo(() => month.endOf('month'), [month]);
 
     const { customTasks, isLoading: customLoading } = useCustomTasks(rangeStart, rangeEnd);
@@ -53,21 +53,22 @@ export default function CalendarScreen() {
     const isLoading = plantsLoading || customLoading;
     const isError = plantsError;
 
-    const handleCompleteTask = (task: Task) => {
-        if (task.source === 'custom') {
-            if (task.customTaskId) {
-                updateCustomTask.mutate({
-                    id: task.customTaskId,
-                    payload: { completedAt: new Date().toISOString() },
-                });
-            }
+    const handleToggleTask = (task: Task) => {
+        if (task.source === 'custom' && task.customTaskId) {
+            updateCustomTask.mutate({
+                id: task.customTaskId,
+                payload: { completedAt: task.completedAt ? null : new Date().toISOString() },
+            });
             return;
         }
-        setCompletingTaskId(task.id);
-        logCareAction.mutate(
-            { plantId: task.plantId!, type: task.type },
-            { onSettled: () => setCompletingTaskId(null) },
-        );
+        // Auto tasks: one-way complete only
+        if (!task.completedAt) {
+            setCompletingTaskId(task.id);
+            logCareAction.mutate(
+                { plantId: task.plantId!, type: task.type },
+                { onSettled: () => setCompletingTaskId(null) },
+            );
+        }
     };
 
     const handleTaskOptions = (task: Task) => {
@@ -182,7 +183,7 @@ export default function CalendarScreen() {
                             <TaskList
                                 title={taskSectionTitle}
                                 tasks={selectedDateTasks}
-                                onCompleteTask={handleCompleteTask}
+                                onToggleTask={handleToggleTask}
                                 completingTaskId={completingTaskId ?? undefined}
                                 onOptions={handleTaskOptions}
                             />

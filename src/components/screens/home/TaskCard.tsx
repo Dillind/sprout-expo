@@ -8,14 +8,12 @@ import Animated, {
     useSharedValue,
     useAnimatedStyle,
     withSpring,
-    withTiming,
-    runOnJS,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 
 type Props = {
     task: Task;
-    onComplete: (task: Task) => void;
+    onToggle: (task: Task) => void;
     isCompleting?: boolean;
     onOptions?: (task: Task) => void;
 };
@@ -38,52 +36,46 @@ function CareIcon({ type, size, color }: { type: string; size: number; color: st
     return <RefreshCw size={size} color={color} />;
 }
 
-export default function TaskCard({ task, onComplete, isCompleting, onOptions }: Props) {
-    const careColor = CARE_COLORS[task.type] ?? COLORS.primary;
-    const checkScale = useSharedValue(0);
-    const cardOpacity = useSharedValue(1);
-    const cardTranslateX = useSharedValue(0);
+export default function TaskCard({ task, onToggle, isCompleting, onOptions }: Props) {
+    const isCompleted = !!task.completedAt;
+    const careColor = isCompleted
+        ? COLORS.textSecondary
+        : (CARE_COLORS[task.type] ?? COLORS.primary);
+
+    const checkScale = useSharedValue(isCompleted ? 1 : 0);
 
     const checkStyle = useAnimatedStyle(() => ({
         transform: [{ scale: checkScale.value }],
         opacity: checkScale.value,
     }));
 
-    const cardStyle = useAnimatedStyle(() => ({
-        opacity: cardOpacity.value,
-        transform: [{ translateX: cardTranslateX.value }],
-    }));
-
-    const handleComplete = useCallback(() => {
-        // 1. Spring the checkmark in
-        checkScale.value = withSpring(1, { damping: 12, stiffness: 200 });
-        // 2. Haptic at the moment the check appears
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        // 3. After 280ms, slide the card out and call onComplete
-        cardOpacity.value = withTiming(0, { duration: 280 });
-        cardTranslateX.value = withTiming(400, { duration: 280 }, (finished) => {
-            if (finished) runOnJS(onComplete)(task);
-        });
-    }, [task, onComplete]);
+    const handlePress = useCallback(() => {
+        if (!isCompleted) {
+            checkScale.value = withSpring(1, { damping: 12, stiffness: 200 });
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        } else {
+            checkScale.value = withSpring(0, { damping: 12, stiffness: 200 });
+        }
+        onToggle(task);
+    }, [task, onToggle, isCompleted]);
 
     const displayLabel = task.title ?? CARE_LABELS[task.type];
+    const activeCareColor = CARE_COLORS[task.type] ?? COLORS.primary;
 
     return (
-        <Animated.View
-            style={[
-                {
-                    backgroundColor: '#fff',
-                    borderRadius: 16,
-                    padding: 16,
-                    marginBottom: 12,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 12,
-                    borderWidth: 1,
-                    borderColor: task.isOverdue ? '#FDDEDD' : COLORS.border,
-                },
-                cardStyle,
-            ]}
+        <View
+            style={{
+                backgroundColor: isCompleted ? COLORS.backgroundSecondary : '#fff',
+                borderRadius: 16,
+                padding: 16,
+                marginBottom: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 12,
+                borderWidth: 1,
+                borderColor: isCompleted ? 'transparent' : task.isOverdue ? '#FDDEDD' : COLORS.border,
+                opacity: isCompleted ? 0.7 : 1,
+            }}
         >
             {/* Plant photo or icon */}
             {task.plantPhotoUrl ? (
@@ -98,7 +90,7 @@ export default function TaskCard({ task, onComplete, isCompleting, onOptions }: 
                         width: 48,
                         height: 48,
                         borderRadius: 12,
-                        backgroundColor: `${careColor}20`,
+                        backgroundColor: `${activeCareColor}20`,
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
@@ -110,10 +102,14 @@ export default function TaskCard({ task, onComplete, isCompleting, onOptions }: 
             {/* Task info */}
             <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <AppText size="sm" font="semiBold">
+                    <AppText
+                        size="sm"
+                        font="semiBold"
+                        style={isCompleted ? { textDecorationLine: 'line-through', color: COLORS.textSecondary } : undefined}
+                    >
                         {task.plantName}
                     </AppText>
-                    {task.isOverdue && (
+                    {task.isOverdue && !isCompleted && (
                         <View
                             style={{
                                 backgroundColor: '#FDDEDD',
@@ -131,7 +127,7 @@ export default function TaskCard({ task, onComplete, isCompleting, onOptions }: 
                 <View
                     style={{
                         alignSelf: 'flex-start',
-                        backgroundColor: `${careColor}18`,
+                        backgroundColor: isCompleted ? `${COLORS.textSecondary}18` : `${activeCareColor}18`,
                         borderRadius: 6,
                         paddingHorizontal: 8,
                         paddingVertical: 2,
@@ -150,25 +146,25 @@ export default function TaskCard({ task, onComplete, isCompleting, onOptions }: 
                 </Pressable>
             )}
 
-            {/* Complete button */}
+            {/* Toggle button */}
             <Pressable
-                onPress={handleComplete}
+                onPress={handlePress}
                 disabled={isCompleting}
                 style={{
                     width: 36,
                     height: 36,
                     borderRadius: 18,
                     borderWidth: 2,
-                    borderColor: careColor,
+                    borderColor: isCompleted ? COLORS.textSecondary : activeCareColor,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: 'transparent',
+                    backgroundColor: isCompleted ? COLORS.textSecondary : 'transparent',
                 }}
             >
                 <Animated.View style={[{ position: 'absolute' }, checkStyle]}>
-                    <Check size={18} color={careColor} strokeWidth={3} />
+                    <Check size={18} color={isCompleted ? '#fff' : activeCareColor} strokeWidth={3} />
                 </Animated.View>
             </Pressable>
-        </Animated.View>
+        </View>
     );
 }

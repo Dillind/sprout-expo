@@ -38,6 +38,7 @@ export function useCustomTasks(rangeStart: Dayjs, rangeEnd: Dayjs) {
             source: 'custom',
             customTaskId: ct.id,
             title: ct.title,
+            completedAt: ct.completedAt,
         };
     });
 

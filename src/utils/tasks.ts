@@ -16,6 +16,7 @@ export type Task = {
     source: 'auto' | 'custom';
     customTaskId?: string; // set when source === 'custom'
     title?: string;        // custom task label, shown in place of care type label when set
+    completedAt?: string | null; // set when source === 'custom' and task is completed
 };
 
 /** Get the Monday of the week containing the given date (locale-independent) */
@@ -136,6 +137,11 @@ export function getTasksByDateTypeMap(tasks: Task[]): Map<string, Set<CareType>>
  */
 export function mergeTaskLists(autoTasks: Task[], customTasks: Task[]): Task[] {
     return [...autoTasks, ...customTasks].sort((a, b) => {
+        // Completed tasks always go last
+        const aCompleted = !!a.completedAt;
+        const bCompleted = !!b.completedAt;
+        if (aCompleted !== bCompleted) return aCompleted ? 1 : -1;
+        // Overdue first within incomplete tasks
         if (a.isOverdue && !b.isOverdue) return -1;
         if (!a.isOverdue && b.isOverdue) return 1;
         return dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf();

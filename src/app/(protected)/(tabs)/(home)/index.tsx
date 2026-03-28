@@ -61,12 +61,22 @@ export default function HomeScreen() {
         ? "Today's Tasks"
         : `Tasks for ${selectedDate.format('ddd, MMM D')}`;
 
-    const handleCompleteTask = (task: Task) => {
-        setCompletingTaskId(task.id);
-        logCareAction.mutate(
-            { plantId: task.plantId!, type: task.type },
-            { onSettled: () => setCompletingTaskId(null) },
-        );
+    const handleToggleTask = (task: Task) => {
+        if (task.source === 'custom' && task.customTaskId) {
+            updateCustomTask.mutate({
+                id: task.customTaskId,
+                payload: { completedAt: task.completedAt ? null : new Date().toISOString() },
+            });
+            return;
+        }
+        // Auto tasks: one-way complete only
+        if (!task.completedAt) {
+            setCompletingTaskId(task.id);
+            logCareAction.mutate(
+                { plantId: task.plantId!, type: task.type },
+                { onSettled: () => setCompletingTaskId(null) },
+            );
+        }
     };
 
     const handleTaskOptions = (task: Task) => {
@@ -200,7 +210,7 @@ export default function HomeScreen() {
                         <TaskList
                             title={sectionTitle}
                             tasks={todayTasks}
-                            onCompleteTask={handleCompleteTask}
+                            onToggleTask={handleToggleTask}
                             completingTaskId={completingTaskId ?? undefined}
                             onOptions={handleTaskOptions}
                         />

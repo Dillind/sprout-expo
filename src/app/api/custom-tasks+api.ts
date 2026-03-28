@@ -11,7 +11,7 @@ export async function GET(request: Request) {
         const rangeStart = url.searchParams.get('rangeStart');
         const rangeEnd = url.searchParams.get('rangeEnd');
 
-        const where: Record<string, unknown> = { userId, completedAt: null };
+        const where: Record<string, unknown> = { userId };
 
         if (rangeStart && rangeEnd) {
             where.dueDate = {

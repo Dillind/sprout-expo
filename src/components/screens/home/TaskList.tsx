@@ -7,13 +7,13 @@ import TaskCard from './TaskCard';
 
 type Props = {
     tasks: Task[];
-    onCompleteTask: (task: Task) => void;
+    onToggleTask: (task: Task) => void;
     completingTaskId?: string;
     title?: string;
     onOptions?: (task: Task) => void;
 };
 
-export default function TaskList({ tasks, onCompleteTask, completingTaskId, title, onOptions }: Props) {
+export default function TaskList({ tasks, onToggleTask, completingTaskId, title, onOptions }: Props) {
     return (
         <View>
             {title && (
@@ -33,7 +33,7 @@ export default function TaskList({ tasks, onCompleteTask, completingTaskId, titl
                     <TaskCard
                         key={task.id}
                         task={task}
-                        onComplete={onCompleteTask}
+                        onToggle={onToggleTask}
                         isCompleting={completingTaskId === task.id}
                         onOptions={onOptions}
                     />
