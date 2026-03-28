@@ -38,8 +38,7 @@ async function uploadPhoto(uri: string, userId: string): Promise<string | null> 
         console.error('[uploadPhoto]', error);
         return null;
     }
-    const { data } = supabase.storage.from('plant-photos').getPublicUrl(fileName);
-    return data.publicUrl;
+    return fileName; // storage path e.g. "userId/1234567890.jpg"
 }
 
 export default function AddPlantStep4() {
