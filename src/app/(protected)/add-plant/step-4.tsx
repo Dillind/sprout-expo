@@ -1,8 +1,10 @@
-import { createPlant } from '@/src/api/plants';
+import { PlantService } from '@/src/services/plant-service';
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
 import supabase from '@/src/lib/supabase';
 import { useAddPlantStore } from '@/src/stores/add-plant.store';
+import { decode } from 'base64-arraybuffer';
+import * as FileSystem from 'expo-file-system/legacy';
 import { router } from 'expo-router';
 import { Leaf } from 'lucide-react-native';
 import React, { useState } from 'react';
@@ -26,13 +28,16 @@ async function uploadPhoto(uri: string, userId: string): Promise<string | null> 
     const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext.toLowerCase())
         ? ext.toLowerCase()
         : 'jpg';
+    const mimeType = safeExt === 'jpg' || safeExt === 'jpeg' ? 'image/jpeg' : `image/${safeExt}`;
     const fileName = `${userId}/${Date.now()}.${safeExt}`;
-    const response = await fetch(uri);
-    const blob = await response.blob();
+    const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
     const { error } = await supabase.storage
         .from('plant-photos')
-        .upload(fileName, blob, { contentType: `image/${safeExt}` });
-    if (error) return null;
+        .upload(fileName, decode(base64), { contentType: mimeType });
+    if (error) {
+        console.error('[uploadPhoto]', error);
+        return null;
+    }
     const { data } = supabase.storage.from('plant-photos').getPublicUrl(fileName);
     return data.publicUrl;
 }
@@ -74,16 +79,18 @@ export default function AddPlantStep4() {
                 setPhotoUrl(photoUrl);
             }
 
-            const plant = await createPlant({
+            const { data: plant, error: plantError } = await PlantService.create({
                 name,
-                photoUrl,
+                photo_url: photoUrl,
                 location,
-                wateringDays,
-                waterAmountMl: waterAmountMl ?? null,
-                fertilizeDays: fertilizeDays ?? null,
-                repotDays: repotDays ?? null,
-                remindersEnabled,
+                watering_days: wateringDays,
+                water_amount_ml: waterAmountMl ?? null,
+                fertilize_days: fertilizeDays ?? null,
+                repot_days: repotDays ?? null,
+                reminders_enabled: remindersEnabled,
+                user_id: session.user.id,
             });
+            if (plantError) throw plantError;
 
             reset();
             router.replace({

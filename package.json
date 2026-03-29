@@ -12,7 +12,7 @@
         "web": "expo start --web",
         "lint": "expo lint",
         "type-check": "npx tsc --noEmit",
-        "sync:types": "npx openapi-typescript@6.7.6 ./openapi.json -o ./src/api/generated.d.ts"
+        "sync:types": "supabase gen types typescript --project-id rxnnwpqjpbponngkpyyb > backend-sdk/schema.d.ts"
     },
     "dependencies": {
         "@expo/ui": "55.0.1",
@@ -20,15 +20,13 @@
         "@hookform/resolvers": "^5.2.2",
         "@legendapp/list": "^2.0.19",
         "@lodev09/react-native-true-sheet": "^3.8.2",
-        "@prisma/adapter-pg": "^7.5.0",
-        "@prisma/client": "^7.5.0",
         "@react-native-google-signin/google-signin": "^16.1.2",
         "@react-navigation/bottom-tabs": "^7.4.0",
         "@react-navigation/elements": "^2.6.3",
         "@react-navigation/native": "^7.1.8",
         "@supabase/supabase-js": "^2.99.1",
         "@tanstack/react-query": "^5.95.2",
-        "@types/pg": "^8.20.0",
+        "base64-arraybuffer": "^1.0.2",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "dayjs": "^1.11.19",
@@ -38,6 +36,7 @@
         "expo-constants": "~55.0.7",
         "expo-crypto": "^55.0.9",
         "expo-dev-client": "~55.0.10",
+        "expo-file-system": "~55.0.12",
         "expo-font": "~55.0.4",
         "expo-haptics": "~55.0.8",
         "expo-image": "~55.0.5",
@@ -53,8 +52,6 @@
         "expo-web-browser": "~55.0.9",
         "lucide-react-native": "^0.577.0",
         "moti": "^0.30.0",
-        "openapi-fetch": "^0.17.0",
-        "pg": "^8.20.0",
         "react": "19.2.0",
         "react-dom": "19.2.0",
         "react-hook-form": "^7.71.1",
@@ -86,7 +83,6 @@
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.5",
         "eslint-plugin-react-hooks": "^6.1.1",
-        "prisma": "^7.5.0",
         "typescript": "~5.9.2"
     },
     "private": true

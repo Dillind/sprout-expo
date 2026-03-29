@@ -1,7 +1,8 @@
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
-import { Plant } from '@/src/api/plants';
+import { Plant } from '@/src/types/db';
 import { getPlantHealth, getNextWaterLabel, HEALTH_COLORS } from '@/src/utils/plant-health';
+import { getPlantPhotoUrl } from '@/src/utils/plant-photo';
 import { Droplets, Leaf, MapPin } from 'lucide-react-native';
 import React from 'react';
 import { Image, Pressable, View } from 'react-native';
@@ -13,6 +14,7 @@ export default function PlantCard({ plant, onPress }: Props) {
     const healthColor = HEALTH_COLORS[health];
     const nextWater = getNextWaterLabel(plant);
     const isUrgent = nextWater.startsWith('Overdue') || nextWater === 'Today';
+    const photoUrl = getPlantPhotoUrl(plant.photo_url, 112, 112);
 
     return (
         <Pressable
@@ -30,9 +32,9 @@ export default function PlantCard({ plant, onPress }: Props) {
             }}
         >
             {/* Photo / icon */}
-            {plant.photoUrl ? (
+            {photoUrl ? (
                 <Image
-                    source={{ uri: plant.photoUrl }}
+                    source={{ uri: photoUrl }}
                     style={{ width: 56, height: 56, borderRadius: 12 }}
                     resizeMode="cover"
                 />

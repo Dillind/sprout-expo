@@ -1,7 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { Plant } from '@/src/api/plants';
-import type { CareType } from '@/src/api/care-logs';
-export type { CareType };
+import { Plant } from '@/src/types/db';
+export type { CareType } from '@/src/types/db';
 
 export type Task = {
     /** Deterministic ID: `{plantId}-{type}-{YYYY-MM-DD}` or `{plantId}-{type}-overdue` for auto tasks; `custom-{id}` for custom tasks */
@@ -9,7 +8,7 @@ export type Task = {
     plantId: string | null;
     plantName: string; // falls back to task title when no plant linked
     plantPhotoUrl: string | null;
-    type: CareType;
+    type: import('@/src/types/db').CareType;
     /** ISO date-time string */
     dueDate: string;
     isOverdue: boolean;
@@ -34,24 +33,24 @@ export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayj
 
     for (const plant of plants) {
         const careConfigs: Array<{
-            type: CareType;
+            type: import('@/src/types/db').CareType;
             intervalDays: number | null;
             lastAt: string | null;
         }> = [
             {
                 type: 'WATER',
-                intervalDays: plant.wateringDays,
-                lastAt: plant.lastWateredAt ?? null,
+                intervalDays: plant.watering_days,
+                lastAt: plant.last_watered_at ?? null,
             },
             {
                 type: 'FERTILIZE',
-                intervalDays: plant.fertilizeDays ?? null,
-                lastAt: plant.lastFertilizedAt ?? null,
+                intervalDays: plant.fertilize_days ?? null,
+                lastAt: plant.last_fertilized_at ?? null,
             },
             {
                 type: 'REPOT',
-                intervalDays: plant.repotDays ?? null,
-                lastAt: plant.lastRepottedAt ?? null,
+                intervalDays: plant.repot_days ?? null,
+                lastAt: plant.last_repotted_at ?? null,
             },
         ];
 
@@ -60,7 +59,7 @@ export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayj
 
             const base = lastAt
                 ? dayjs(lastAt).startOf('day')
-                : dayjs(plant.createdAt).startOf('day');
+                : dayjs(plant.created_at).startOf('day');
 
             let nextDue = base.add(intervalDays, 'day');
 
@@ -70,7 +69,7 @@ export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayj
                     id: `${plant.id}-${type}-overdue`,
                     plantId: plant.id,
                     plantName: plant.name,
-                    plantPhotoUrl: plant.photoUrl ?? null,
+                    plantPhotoUrl: plant.photo_url ?? null,
                     type,
                     dueDate: rangeStart.toISOString(),
                     isOverdue: true,
@@ -86,7 +85,7 @@ export function generateTasks(plants: Plant[], rangeStart: Dayjs, rangeEnd: Dayj
                         id: `${plant.id}-${type}-${nextDue.format('YYYY-MM-DD')}`,
                         plantId: plant.id,
                         plantName: plant.name,
-                        plantPhotoUrl: plant.photoUrl ?? null,
+                        plantPhotoUrl: plant.photo_url ?? null,
                         type,
                         dueDate: nextDue.toISOString(),
                         isOverdue: false,
@@ -121,8 +120,8 @@ export function getDatesWithTasks(tasks: Task[], rangeStart: Dayjs, rangeEnd: Da
 }
 
 /** Get a map of date → Set<CareType> for calendar dot rendering */
-export function getTasksByDateTypeMap(tasks: Task[]): Map<string, Set<CareType>> {
-    const map = new Map<string, Set<CareType>>();
+export function getTasksByDateTypeMap(tasks: Task[]): Map<string, Set<import('@/src/types/db').CareType>> {
+    const map = new Map<string, Set<import('@/src/types/db').CareType>>();
     for (const task of tasks) {
         const d = dayjs(task.dueDate).format('YYYY-MM-DD');
         if (!map.has(d)) map.set(d, new Set());

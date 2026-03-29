@@ -1,114 +1,95 @@
 import AppText from '@/src/components/core/AppText';
-import TextInputValidated from '@/src/components/core/TextInputValidated';
-import FieldError from '@/src/lib/form/components/field-error';
 import supabase from '@/src/lib/supabase';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { router } from 'expo-router';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { ActivityIndicator, Pressable, View } from 'react-native';
-import { z } from 'zod';
+import { ActivityIndicator, View } from 'react-native';
+import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
-const schema = z.object({
-    email: z.email('Enter a valid email'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+GoogleSignin.configure({
+    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    scopes: ['profile', 'email'],
 });
-
-type FormData = z.infer<typeof schema>;
 
 export default function SignInScreen() {
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<FormData>({
-        resolver: zodResolver(schema),
-    });
-
-    async function onSubmit(data: FormData) {
+    async function handleGoogleSignIn() {
         setError(null);
-        const { error } = await supabase.auth.signInWithPassword({
-            email: data.email,
-            password: data.password,
-        });
-        if (error) setError(error.message);
+        setLoading(true);
+        try {
+            await GoogleSignin.hasPlayServices();
+            const { data } = await GoogleSignin.signIn();
+            if (!data?.idToken) throw new Error('No ID token returned from Google');
+            const { error } = await supabase.auth.signInWithIdToken({
+                provider: 'google',
+                token: data.idToken,
+            });
+            if (error) throw error;
+        } catch (err: any) {
+            setError(err.message ?? 'Google sign-in failed');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function handleAppleSignIn() {
+        setError(null);
+        setLoading(true);
+        try {
+            const credential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                ],
+            });
+            if (!credential.identityToken) throw new Error('No identity token from Apple');
+            const { error } = await supabase.auth.signInWithIdToken({
+                provider: 'apple',
+                token: credential.identityToken,
+            });
+            if (error) throw error;
+        } catch (err: any) {
+            if (err.code !== 'ERR_REQUEST_CANCELED') {
+                setError(err.message ?? 'Apple sign-in failed');
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
-        <View className="flex-1 px-6 pt-16">
-            <Pressable onPress={() => router.back()} className="mb-8">
-                <AppText className="text-base text-gray-500">← Back</AppText>
-            </Pressable>
-            <AppText className="text-2xl font-bold mb-8">Sign in</AppText>
-            <View className="gap-4">
-                <Controller
-                    control={control}
-                    name="email"
-                    render={({ field: { onChange, value } }) => (
-                        <View>
-                            <TextInputValidated
-                                name="email"
-                                placeholder="Email"
-                                value={value}
-                                onChangeText={onChange}
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                secureTextEntry={false}
-                                returnKeyType="next"
-                            />
-                            <FieldError error={errors.email?.message as string} />
-                        </View>
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="password"
-                    render={({ field: { onChange, value } }) => (
-                        <View>
-                            <TextInputValidated
-                                name="password"
-                                placeholder="Password"
-                                value={value}
-                                onChangeText={onChange}
-                                secureTextEntry
-                                autoCapitalize="none"
-                                keyboardType="default"
-                                returnKeyType="done"
-                            />
-                            <FieldError error={errors.password?.message as string} />
-                        </View>
-                    )}
-                />
-                {error && <AppText className="text-red-500 text-sm text-center">{error}</AppText>}
-                <Pressable
-                    onPress={handleSubmit(onSubmit)}
-                    disabled={isSubmitting}
-                    className="h-[52px] bg-green-700 rounded-xl items-center justify-center"
-                >
-                    {isSubmitting ? (
-                        <ActivityIndicator color="white" />
-                    ) : (
-                        <AppText className="text-white font-semibold text-base">Sign in</AppText>
-                    )}
-                </Pressable>
-                <Pressable
-                    onPress={() => router.push('/(public)/(auth)/forgot-password')}
-                    className="items-center"
-                >
-                    <AppText className="text-sm text-gray-500">Forgot password?</AppText>
-                </Pressable>
-                <Pressable
-                    onPress={() => router.push('/(public)/(auth)/sign-up')}
-                    className="items-center"
-                >
-                    <AppText className="text-sm text-gray-500">
-                        Don&apos;t have an account?{' '}
-                        <AppText className="text-green-700 font-medium">Sign up</AppText>
-                    </AppText>
-                </Pressable>
-            </View>
+        <View className="flex-1 px-6 pt-24 items-center">
+            <AppText className="text-3xl font-bold mb-2">Welcome to Sprout</AppText>
+            <AppText className="text-base text-gray-500 mb-16 text-center">
+                Sign in to keep your plants alive
+            </AppText>
+
+            {loading ? (
+                <ActivityIndicator size="large" color="#2d6a4f" />
+            ) : (
+                <View className="w-full gap-4">
+                    <GoogleSigninButton
+                        size={GoogleSigninButton.Size.Wide}
+                        color={GoogleSigninButton.Color.Dark}
+                        onPress={handleGoogleSignIn}
+                        style={{ width: '100%', height: 52 }}
+                    />
+
+                    <AppleAuthentication.AppleAuthenticationButton
+                        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                        buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                        cornerRadius={12}
+                        style={{ width: '100%', height: 52 }}
+                        onPress={handleAppleSignIn}
+                    />
+                </View>
+            )}
+
+            {error && (
+                <AppText className="text-red-500 text-sm text-center mt-6">{error}</AppText>
+            )}
         </View>
     );
 }

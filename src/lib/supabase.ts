@@ -1,3 +1,4 @@
+import { Database } from '@/backend-sdk/schema';
 import { createClient } from '@supabase/supabase-js';
 import { createMMKV } from 'react-native-mmkv';
 
@@ -18,7 +19,7 @@ const mmkvStorageAdapter = {
     },
 };
 
-const supabase = createClient(
+const supabase = createClient<Database>(
     process.env.EXPO_PUBLIC_SUPABASE_URL!,
     process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
     {

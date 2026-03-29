@@ -3,6 +3,7 @@ import { COLORS } from '@/src/constants/theme';
 import { useLogCareAction } from '@/src/hooks/care-logs';
 import { usePlants, useDeletePlant } from '@/src/hooks/plants';
 import { getPlantHealth, getNextWaterLabel, HEALTH_COLORS } from '@/src/utils/plant-health';
+import { getPlantPhotoUrl } from '@/src/utils/plant-photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ChevronLeft, Droplets, Flower2, Leaf, MapPin, Pencil, RefreshCw } from 'lucide-react-native';
 import React, { useState } from 'react';
@@ -30,6 +31,7 @@ export default function PlantDetailScreen() {
     const [logging, setLogging] = useState(false);
 
     const plant = plants.find((p) => p.id === id);
+    const heroUrl = getPlantPhotoUrl(plant?.photo_url, 800, 560);
 
     if (isLoading) {
         return (
@@ -90,9 +92,9 @@ export default function PlantDetailScreen() {
             <ScrollView showsVerticalScrollIndicator={false}>
                 {/* Hero photo */}
                 <View style={{ position: 'relative' }}>
-                    {plant.photoUrl ? (
+                    {heroUrl ? (
                         <Image
-                            source={{ uri: plant.photoUrl }}
+                            source={{ uri: heroUrl }}
                             style={{ width: '100%', height: 280 }}
                             resizeMode="cover"
                         />
@@ -255,20 +257,20 @@ export default function PlantDetailScreen() {
                             <CareRow
                                 icon={<Droplets size={16} color={COLORS.info} />}
                                 label="Water"
-                                value={`Every ${plant.wateringDays} days`}
+                                value={`Every ${plant.watering_days} days`}
                             />
-                            {plant.fertilizeDays ? (
+                            {plant.fertilize_days ? (
                                 <CareRow
                                     icon={<Flower2 size={16} color={COLORS.success} />}
                                     label="Fertilize"
-                                    value={`Every ${plant.fertilizeDays} days`}
+                                    value={`Every ${plant.fertilize_days} days`}
                                 />
                             ) : null}
-                            {plant.repotDays ? (
+                            {plant.repot_days ? (
                                 <CareRow
                                     icon={<RefreshCw size={16} color="#A0714F" />}
                                     label="Repot"
-                                    value={`Every ${plant.repotDays} days`}
+                                    value={`Every ${plant.repot_days} days`}
                                 />
                             ) : null}
                         </View>

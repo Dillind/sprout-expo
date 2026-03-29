@@ -39,7 +39,7 @@ export default function LocationFilterTabs({ locations, selected, onSelect }: Pr
                     >
                         <AppText
                             size="xs"
-                            font={isActive ? 'semiBold' : 'regular'}
+                            font={isActive ? 'semiBold' : 'base'}
                             style={{ color: isActive ? '#fff' : COLORS.textSecondary }}
                         >
                             {tab}

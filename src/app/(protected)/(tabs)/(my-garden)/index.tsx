@@ -4,7 +4,7 @@ import LocationFilterTabs from '@/src/components/screens/my-garden/LocationFilte
 import PlantCard from '@/src/components/screens/my-garden/PlantCard';
 import { COLORS } from '@/src/constants/theme';
 import { usePlants } from '@/src/hooks/plants';
-import { Plant } from '@/src/api/plants';
+import { Plant } from '@/src/types/db';
 import { sortPlantsByUrgency } from '@/src/utils/plant-health';
 import { router } from 'expo-router';
 import { Leaf, Plus } from 'lucide-react-native';
