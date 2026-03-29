@@ -4,15 +4,16 @@ import TaskList from '@/src/components/screens/home/TaskList';
 import AddTaskSheet from '@/src/components/sheets/add-task-sheet';
 import { COLORS } from '@/src/constants/theme';
 import { useLogCareAction } from '@/src/hooks/care-logs';
-import { useCustomTasks, useUpdateCustomTask, useDeleteCustomTask } from '@/src/hooks/custom-tasks';
+import { useCustomTasks, useDeleteCustomTask, useUpdateCustomTask } from '@/src/hooks/custom-tasks';
 import { usePlants, useUpdatePlant } from '@/src/hooks/plants';
 import { generateTasks, getTasksForDate, mergeTaskLists, Task } from '@/src/utils/tasks';
 import { TrueSheet } from '@lodev09/react-native-true-sheet';
 import dayjs, { Dayjs } from 'dayjs';
+import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import React, { useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
-import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CalendarScreen() {
     const { plants, isLoading: plantsLoading, isError: plantsError } = usePlants();
@@ -99,7 +100,7 @@ export default function CalendarScreen() {
                 };
                 updatePlant.mutate({
                     id: task.plantId,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                     payload: { [fieldMap[task.type]]: newLastAt } as any,
                 });
             }
@@ -139,12 +140,9 @@ export default function CalendarScreen() {
     };
 
     return (
-        <View className="flex-1" style={{ backgroundColor: COLORS.backgroundSecondary }}>
+        <SafeAreaView edges={['top']} className="flex-1">
             {/* Header */}
-            <View
-                className="px-6 pt-14 pb-4 bg-white"
-                style={{ borderBottomWidth: 1, borderBottomColor: COLORS.border }}
-            >
+            <View className="px-6 pb-4 bg-white">
                 <AppText size="lg" font="bold">
                     Calendar
                 </AppText>
@@ -193,22 +191,7 @@ export default function CalendarScreen() {
                     {/* FAB */}
                     <Pressable
                         onPress={() => addTaskSheetRef.current?.present()}
-                        style={{
-                            position: 'absolute',
-                            bottom: 24,
-                            right: 24,
-                            width: 52,
-                            height: 52,
-                            borderRadius: 26,
-                            backgroundColor: COLORS.primaryDark,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            shadowColor: COLORS.primaryDark,
-                            shadowOffset: { width: 0, height: 4 },
-                            shadowOpacity: 0.35,
-                            shadowRadius: 8,
-                            elevation: 6,
-                        }}
+                        className="absolute bottom-24 right-24 w-13 h-13 rounded-full bg-primary-dark items-center justify-center shadow-md shadow-primary-dark/35 elevation-6"
                     >
                         <Plus size={24} color="#fff" />
                     </Pressable>
@@ -220,6 +203,6 @@ export default function CalendarScreen() {
                     />
                 </>
             )}
-        </View>
+        </SafeAreaView>
     );
 }

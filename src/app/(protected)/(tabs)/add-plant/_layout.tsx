@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
-export default function HomeLayout() {
+export default function AddPlantLayout() {
     return (
         <>
             <StatusBar style="dark" />

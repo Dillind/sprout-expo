@@ -1,59 +1,39 @@
-import CalendarIcon from '@/src/assets/icons/tab-icons/calendar-icon';
-import HomeIcon from '@/src/assets/icons/tab-icons/home-icon';
-import MyGardenIcon from '@/src/assets/icons/tab-icons/my-garden-icon';
-import ProfileIcon from '@/src/assets/icons/tab-icons/profile-icon';
-import { HapticTab } from '@/src/components/haptic-tab';
-import { COLORS, FONTS } from '@/src/constants/theme';
-import { Tabs } from 'expo-router';
+import { COLORS } from '@/src/constants/theme';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
 export default function TabsLayout() {
     return (
-        <Tabs
-            screenOptions={{
-                tabBarActiveTintColor: COLORS.primary,
-                headerShown: false,
-                tabBarButton: HapticTab,
-                tabBarLabelStyle: {
-                    fontSize: 12,
-                    fontFamily: FONTS.InterRegular,
-                },
-                tabBarStyle: {
-                    paddingTop: 5,
-                },
-                sceneStyle: {
-                    backgroundColor: COLORS.white,
-                },
-            }}
-            initialRouteName="(home)"
+        <NativeTabs
+            disableTransparentOnScrollEdge={true}
+            tintColor={COLORS.primary}
+            minimizeBehavior="onScrollDown"
         >
-            <Tabs.Screen
-                name="(home)"
-                options={{
-                    title: 'Home',
-                    tabBarIcon: ({ color }) => <HomeIcon color={color} />,
-                }}
-            />
-            <Tabs.Screen
-                name="(calendar)"
-                options={{
-                    title: 'Calendar',
-                    tabBarIcon: ({ color }) => <CalendarIcon color={color} />,
-                }}
-            />
-            <Tabs.Screen
-                name="(my-garden)"
-                options={{
-                    title: 'My Garden',
-                    tabBarIcon: ({ color }) => <MyGardenIcon color={color} />,
-                }}
-            />
-            <Tabs.Screen
-                name="(profile)"
-                options={{
-                    title: 'Profile',
-                    tabBarIcon: ({ color }) => <ProfileIcon color={color} />,
-                }}
-            />
-        </Tabs>
+            <NativeTabs.Trigger name="(home)">
+                <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+                <NativeTabs.Trigger.Icon sf={'house.fill'} />
+            </NativeTabs.Trigger>
+
+            <NativeTabs.Trigger name="calendar">
+                <NativeTabs.Trigger.Label>Calendar</NativeTabs.Trigger.Label>
+                <NativeTabs.Trigger.Icon sf={'calendar'} />
+            </NativeTabs.Trigger>
+
+            <NativeTabs.Trigger name="my-garden">
+                <NativeTabs.Trigger.Label>My Garden</NativeTabs.Trigger.Label>
+                <NativeTabs.Trigger.Icon sf={'leaf.fill'} />
+            </NativeTabs.Trigger>
+
+            <NativeTabs.Trigger name="profile">
+                <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+                <NativeTabs.Trigger.Icon sf={'person.fill'} />
+            </NativeTabs.Trigger>
+
+            <NativeTabs.Trigger name="add-plant" role="search">
+                <NativeTabs.Trigger.Label>Add Plant</NativeTabs.Trigger.Label>
+                <NativeTabs.Trigger.Icon
+                    sf={{ default: 'plus.app.fill', selected: 'plus.app.fill' }}
+                />
+            </NativeTabs.Trigger>
+        </NativeTabs>
     );
 }

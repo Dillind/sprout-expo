@@ -7,7 +7,7 @@ import { usePlants } from '@/src/hooks/plants';
 import { Plant } from '@/src/types/db';
 import { sortPlantsByUrgency } from '@/src/utils/plant-health';
 import { router } from 'expo-router';
-import { Leaf, Plus } from 'lucide-react-native';
+import { Leaf } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from 'react-native';
 
@@ -76,19 +76,6 @@ export default function MyGardenScreen() {
                 <AppText size="lg" font="bold">
                     My Garden
                 </AppText>
-                <Pressable
-                    onPress={() => router.push('/(protected)/add-plant')}
-                    style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        backgroundColor: COLORS.primaryDark,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Plus size={20} color="#fff" />
-                </Pressable>
             </View>
 
             {isLoading ? (

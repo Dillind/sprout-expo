@@ -8,7 +8,7 @@ import { usePlants, useUpdatePlant } from '@/src/hooks/plants';
 import { generateTasks, getTasksForDate, mergeTaskLists, Task } from '@/src/utils/tasks';
 import dayjs, { Dayjs } from 'dayjs';
 import { router } from 'expo-router';
-import { Cloud, Plus } from 'lucide-react-native';
+import { Cloud } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 
@@ -156,13 +156,6 @@ export default function HomeScreen() {
                 <AppText size="lg" font="bold">
                     My Garden
                 </AppText>
-                <Pressable
-                    onPress={() => router.push('/(protected)/add-plant')}
-                    className="w-10 h-10 rounded-full items-center justify-center"
-                    style={{ backgroundColor: COLORS.primaryDark }}
-                >
-                    <Plus size={20} color="#fff" />
-                </Pressable>
             </View>
 
             {isLoading ? (

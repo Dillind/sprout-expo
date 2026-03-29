@@ -6,7 +6,7 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 
 const LOCATION_LABELS: Record<string, string> = {
-    'living-room': 'Living Room',
+    livingRoom: 'Living Room',
     bedroom: 'Bedroom',
     balcony: 'Balcony',
     office: 'Office',
@@ -32,7 +32,6 @@ export default function AddPlantSuccess() {
 
             {/* Content */}
             <View className="flex-1 items-center justify-center px-6">
-                {/* Plant icon circle */}
                 <View className="w-24 h-24 rounded-full bg-gray-100 items-center justify-center mb-6">
                     <Leaf size={40} color={COLORS.primaryDark} />
                 </View>

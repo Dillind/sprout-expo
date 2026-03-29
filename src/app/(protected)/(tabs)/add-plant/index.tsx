@@ -2,7 +2,7 @@ import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
 import { useAddPlantStore } from '@/src/stores/add-plant.store';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { Icon, router } from 'expo-router';
 import { ChevronLeft, ImagePlus } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
@@ -16,7 +16,7 @@ import {
     View,
 } from 'react-native';
 
-export default function AddPlantStep1() {
+export default function Index() {
     const { name, photoUri, setName, setPhotoUri, reset } = useAddPlantStore();
     const [loading, setLoading] = useState(false);
 
@@ -140,7 +140,8 @@ export default function AddPlantStep1() {
                     style={{ backgroundColor: canProceed ? COLORS.primaryDark : COLORS.border }}
                 >
                     <AppText size="sm" font="bold" color="white">
-                        Next →
+                        Next
+                        <Icon sf={'arrow.right'} />
                     </AppText>
                 </Pressable>
             </View>

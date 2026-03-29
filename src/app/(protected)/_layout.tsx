@@ -2,7 +2,7 @@ import useUserStore from '@/src/stores/user-store';
 import { Stack } from 'expo-router';
 
 export default function ProtectedLayout() {
-    const user = useUserStore((s) => s.user);
+    const { user } = useUserStore();
 
     // TODO: Add onboarding guards back (use user.onboarding_completed)
 

@@ -1,7 +1,7 @@
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
 import { useAddPlantStore } from '@/src/stores/add-plant.store';
-import { router } from 'expo-router';
+import { Icon, router } from 'expo-router';
 import { Bath, BedDouble, Monitor, Plus, Sofa, Sun, UtensilsCrossed } from 'lucide-react-native';
 import React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
@@ -104,7 +104,8 @@ export default function AddPlantStep2() {
                     style={{ borderColor: COLORS.border }}
                 >
                     <AppText size="sm" font="bold">
-                        ← Back
+                        <Icon sf={'arrow.left'} />
+                        Back
                     </AppText>
                 </Pressable>
                 <Pressable
@@ -114,7 +115,8 @@ export default function AddPlantStep2() {
                     style={{ backgroundColor: canProceed ? COLORS.primaryDark : COLORS.border }}
                 >
                     <AppText size="sm" font="bold" color="white">
-                        Next Step →
+                        Next Step
+                        <Icon sf={'arrow.right'} />
                     </AppText>
                 </Pressable>
             </View>
