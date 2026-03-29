@@ -1,6 +1,6 @@
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
-import { Plant } from '@/src/api/plants';
+import { Plant } from '@/src/types/db';
 import { getPlantHealth, isWaterUrgent } from '@/src/utils/plant-health';
 import React from 'react';
 import { View } from 'react-native';

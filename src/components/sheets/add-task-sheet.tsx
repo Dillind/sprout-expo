@@ -5,7 +5,7 @@ import BaseSheetHeader from './base-sheet-header';
 import { COLORS } from '@/src/constants/theme';
 import { useCreateCustomTask } from '@/src/hooks/custom-tasks';
 import { usePlants } from '@/src/hooks/plants';
-import { CareType } from '@/src/api/care-logs';
+import { CareType } from '@/src/types/db';
 import { TrueSheet } from '@lodev09/react-native-true-sheet';
 import { Dayjs } from 'dayjs';
 import React, { useState } from 'react';
@@ -42,8 +42,8 @@ export default function AddTaskSheet({ sheetRef, selectedDate, handleDismiss }: 
             {
                 title: title.trim(),
                 type: selectedType,
-                dueDate: selectedDate.format('YYYY-MM-DD'),
-                ...(selectedPlantId ? { plantId: selectedPlantId } : {}),
+                due_date: selectedDate.format('YYYY-MM-DD'),
+                ...(selectedPlantId ? { plant_id: selectedPlantId } : {}),
             },
             {
                 onSuccess: () => {

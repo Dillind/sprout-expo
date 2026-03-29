@@ -31,7 +31,7 @@ export default function PlantDetailScreen() {
     const [logging, setLogging] = useState(false);
 
     const plant = plants.find((p) => p.id === id);
-    const heroUrl = getPlantPhotoUrl(plant?.photoUrl, 800, 560);
+    const heroUrl = getPlantPhotoUrl(plant?.photo_url, 800, 560);
 
     if (isLoading) {
         return (
@@ -257,20 +257,20 @@ export default function PlantDetailScreen() {
                             <CareRow
                                 icon={<Droplets size={16} color={COLORS.info} />}
                                 label="Water"
-                                value={`Every ${plant.wateringDays} days`}
+                                value={`Every ${plant.watering_days} days`}
                             />
-                            {plant.fertilizeDays ? (
+                            {plant.fertilize_days ? (
                                 <CareRow
                                     icon={<Flower2 size={16} color={COLORS.success} />}
                                     label="Fertilize"
-                                    value={`Every ${plant.fertilizeDays} days`}
+                                    value={`Every ${plant.fertilize_days} days`}
                                 />
                             ) : null}
-                            {plant.repotDays ? (
+                            {plant.repot_days ? (
                                 <CareRow
                                     icon={<RefreshCw size={16} color="#A0714F" />}
                                     label="Repot"
-                                    value={`Every ${plant.repotDays} days`}
+                                    value={`Every ${plant.repot_days} days`}
                                 />
                             ) : null}
                         </View>

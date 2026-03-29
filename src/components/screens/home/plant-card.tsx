@@ -1,4 +1,4 @@
-import { Plant } from '@/src/api/plants';
+import { Plant } from '@/src/types/db';
 import { COLORS } from '@/src/constants/theme';
 import { Leaf } from 'lucide-react-native';
 import { View } from 'react-native';
@@ -26,7 +26,7 @@ function PlantCard({ plant }: Props) {
                 </AppText>
             </View>
             <AppText size="xs" color="gray">
-                Every {plant.wateringDays}d
+                Every {plant.watering_days}d
             </AppText>
         </View>
     );

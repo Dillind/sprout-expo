@@ -1,10 +1,10 @@
-import { useAuth } from '@/src/providers/AuthProvider';
+import useUserStore from '@/src/stores/user-store';
 import { Stack } from 'expo-router';
 
 export default function ProtectedLayout() {
-    const { profile } = useAuth();
+    const user = useUserStore((s) => s.user);
 
-    // TODO: Add onboarding guarads back
+    // TODO: Add onboarding guards back (use user.onboarding_completed)
 
     return (
         <Stack>

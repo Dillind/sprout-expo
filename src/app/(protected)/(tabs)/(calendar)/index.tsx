@@ -57,7 +57,7 @@ export default function CalendarScreen() {
         if (task.source === 'custom' && task.customTaskId) {
             updateCustomTask.mutate({
                 id: task.customTaskId,
-                payload: { completedAt: task.completedAt ? null : new Date().toISOString() },
+                payload: { completed_at: task.completedAt ? null : new Date().toISOString() },
             });
             return;
         }
@@ -79,23 +79,23 @@ export default function CalendarScreen() {
             if (isCustom && task.customTaskId) {
                 updateCustomTask.mutate({
                     id: task.customTaskId,
-                    payload: { dueDate: newDate.format('YYYY-MM-DD') },
+                    payload: { due_date: newDate.format('YYYY-MM-DD') },
                 });
             } else if (task.plantId) {
                 const plant = plants.find((p) => p.id === task.plantId);
                 if (!plant) return;
                 const intervalDays =
                     task.type === 'WATER'
-                        ? plant.wateringDays
+                        ? plant.watering_days
                         : task.type === 'FERTILIZE'
-                          ? plant.fertilizeDays
-                          : plant.repotDays;
+                          ? plant.fertilize_days
+                          : plant.repot_days;
                 if (!intervalDays) return;
                 const newLastAt = newDate.subtract(intervalDays, 'day').toISOString();
                 const fieldMap: Record<string, string> = {
-                    WATER: 'lastWateredAt',
-                    FERTILIZE: 'lastFertilizedAt',
-                    REPOT: 'lastRepottedAt',
+                    WATER: 'last_watered_at',
+                    FERTILIZE: 'last_fertilized_at',
+                    REPOT: 'last_repotted_at',
                 };
                 updatePlant.mutate({
                     id: task.plantId,

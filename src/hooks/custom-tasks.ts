@@ -1,44 +1,47 @@
-import {
-    createCustomTask,
-    CreateCustomTaskPayload,
-    CustomTask,
-    deleteCustomTask,
-    listCustomTasks,
-    updateCustomTask,
-    UpdateCustomTaskPayload,
-} from '@/src/api/custom-tasks';
+import { CustomTaskService } from '@/src/services/custom-task-service';
+import useUserStore from '@/src/stores/user-store';
+import { CareType, CustomTask } from '@/src/types/db';
 import { Task } from '@/src/utils/tasks';
-import { CareType } from '@/src/api/care-logs';
-import { Plant } from '@/src/api/plants';
+import { Plant } from '@/src/types/db';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Dayjs } from 'dayjs';
 import { Alert } from 'react-native';
 import { toast } from 'sonner-native';
 
 export function useCustomTasks(rangeStart: Dayjs, rangeEnd: Dayjs) {
+    const userId = useUserStore((s) => s.user?.id);
     const queryClient = useQueryClient();
+
     const { data, isLoading, isError } = useQuery({
         queryKey: ['custom-tasks', rangeStart.format('YYYY-MM-DD'), rangeEnd.format('YYYY-MM-DD')],
-        queryFn: () =>
-            listCustomTasks(rangeStart.format('YYYY-MM-DD'), rangeEnd.format('YYYY-MM-DD')),
+        queryFn: async () => {
+            const { data, error } = await CustomTaskService.list(
+                userId!,
+                rangeStart.format('YYYY-MM-DD'),
+                rangeEnd.format('YYYY-MM-DD'),
+            );
+            if (error) throw error;
+            return data;
+        },
+        enabled: !!userId,
     });
 
-    const plants: Plant[] = queryClient.getQueryData(['plants']) ?? [];
+    const plants: Plant[] = queryClient.getQueryData(['plants', userId]) ?? [];
 
     const customTasks = (data ?? []).map((ct: CustomTask): Task => {
-        const linkedPlant = ct.plantId ? plants.find((p) => p.id === ct.plantId) : null;
+        const linkedPlant = ct.plant_id ? plants.find((p) => p.id === ct.plant_id) : null;
         return {
             id: `custom-${ct.id}`,
-            plantId: ct.plantId,
+            plantId: ct.plant_id,
             plantName: linkedPlant?.name ?? ct.title,
             plantPhotoUrl: null,
             type: ct.type as CareType,
-            dueDate: ct.dueDate,
+            dueDate: ct.due_date,
             isOverdue: false,
             source: 'custom',
             customTaskId: ct.id,
             title: ct.title,
-            completedAt: ct.completedAt,
+            completedAt: ct.completed_at,
         };
     });
 
@@ -47,8 +50,21 @@ export function useCustomTasks(rangeStart: Dayjs, rangeEnd: Dayjs) {
 
 export function useCreateCustomTask() {
     const queryClient = useQueryClient();
+    const userId = useUserStore((s) => s.user?.id);
     return useMutation({
-        mutationFn: (payload: CreateCustomTaskPayload) => createCustomTask(payload),
+        mutationFn: async (payload: {
+            title: string;
+            type: CareType;
+            due_date: string;
+            plant_id?: string | null;
+        }) => {
+            const { data, error } = await CustomTaskService.create({
+                ...payload,
+                user_id: userId!,
+            });
+            if (error) throw error;
+            return data;
+        },
         onSuccess: (newTask) => {
             queryClient.setQueriesData<CustomTask[]>(
                 { queryKey: ['custom-tasks'] },
@@ -66,8 +82,17 @@ export function useCreateCustomTask() {
 export function useUpdateCustomTask() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, payload }: { id: string; payload: UpdateCustomTaskPayload }) =>
-            updateCustomTask(id, payload),
+        mutationFn: async ({
+            id,
+            payload,
+        }: {
+            id: string;
+            payload: Partial<CustomTask>;
+        }) => {
+            const { data, error } = await CustomTaskService.update(id, payload);
+            if (error) throw error;
+            return data;
+        },
         onSuccess: (updatedTask) => {
             queryClient.setQueriesData<CustomTask[]>(
                 { queryKey: ['custom-tasks'] },
@@ -84,8 +109,12 @@ export function useUpdateCustomTask() {
 export function useDeleteCustomTask() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id: string) => deleteCustomTask(id),
-        onSuccess: (_, id) => {
+        mutationFn: async (id: string) => {
+            const { error } = await CustomTaskService.remove(id);
+            if (error) throw error;
+            return id;
+        },
+        onSuccess: (id) => {
             queryClient.setQueriesData<CustomTask[]>(
                 { queryKey: ['custom-tasks'] },
                 (old) => old?.filter((t) => t.id !== id) ?? [],

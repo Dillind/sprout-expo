@@ -1,7 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import dayjs from 'dayjs';
-import { Plant } from '@/src/api/plants';
-import { CareType } from '@/src/api/care-logs';
+import { CareType, Plant } from '@/src/types/db';
 
 // Configure how notifications appear when the app is in the foreground
 Notifications.setNotificationHandler({
@@ -24,21 +23,21 @@ export async function requestNotificationPermissions(): Promise<boolean> {
 function getNextDueDate(plant: Plant, type: CareType): Date | null {
     const intervalDays =
         type === 'WATER'
-            ? plant.wateringDays
+            ? plant.watering_days
             : type === 'FERTILIZE'
-              ? plant.fertilizeDays
-              : plant.repotDays;
+              ? plant.fertilize_days
+              : plant.repot_days;
 
     if (!intervalDays) return null;
 
     const lastAt =
         type === 'WATER'
-            ? plant.lastWateredAt
+            ? plant.last_watered_at
             : type === 'FERTILIZE'
-              ? plant.lastFertilizedAt
-              : plant.lastRepottedAt;
+              ? plant.last_fertilized_at
+              : plant.last_repotted_at;
 
-    const base = lastAt ? dayjs(lastAt) : dayjs(plant.createdAt);
+    const base = lastAt ? dayjs(lastAt) : dayjs(plant.created_at);
     const nextDue = base.add(intervalDays, 'day').hour(9).minute(0).second(0).millisecond(0);
 
     // If next due is in the past, schedule for tomorrow at 9am
@@ -58,10 +57,9 @@ function getNotificationContent(plant: Plant, type: CareType): { title: string; 
 }
 
 export async function scheduleNextCareNotification(plant: Plant, type: CareType): Promise<void> {
-    // Cancel any existing notification for this plant+type
     await cancelCareNotification(plant.id, type);
 
-    if (!plant.remindersEnabled) return;
+    if (!plant.reminders_enabled) return;
 
     const nextDue = getNextDueDate(plant, type);
     if (!nextDue) return;

@@ -1,4 +1,4 @@
-import { createPlant } from '@/src/api/plants';
+import { PlantService } from '@/src/services/plant-service';
 import AppText from '@/src/components/core/AppText';
 import { COLORS } from '@/src/constants/theme';
 import supabase from '@/src/lib/supabase';
@@ -38,7 +38,8 @@ async function uploadPhoto(uri: string, userId: string): Promise<string | null> 
         console.error('[uploadPhoto]', error);
         return null;
     }
-    return fileName; // storage path e.g. "userId/1234567890.jpg"
+    const { data } = supabase.storage.from('plant-photos').getPublicUrl(fileName);
+    return data.publicUrl;
 }
 
 export default function AddPlantStep4() {
@@ -78,16 +79,18 @@ export default function AddPlantStep4() {
                 setPhotoUrl(photoUrl);
             }
 
-            const plant = await createPlant({
+            const { data: plant, error: plantError } = await PlantService.create({
                 name,
-                photoUrl,
+                photo_url: photoUrl,
                 location,
-                wateringDays,
-                waterAmountMl: waterAmountMl ?? null,
-                fertilizeDays: fertilizeDays ?? null,
-                repotDays: repotDays ?? null,
-                remindersEnabled,
+                watering_days: wateringDays,
+                water_amount_ml: waterAmountMl ?? null,
+                fertilize_days: fertilizeDays ?? null,
+                repot_days: repotDays ?? null,
+                reminders_enabled: remindersEnabled,
+                user_id: session.user.id,
             });
+            if (plantError) throw plantError;
 
             reset();
             router.replace({
